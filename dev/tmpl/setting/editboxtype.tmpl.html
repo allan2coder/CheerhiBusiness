@@ -1,0 +1,43 @@
+<md-dialog class="editboxtype">
+	<div class="title" ng-bind="'新建包厢类型'">
+	</div>
+	<div class="fields">
+		<div class="t-th" layout="row" layout-wrap>
+			<div flex="30">类型名称</div>
+			<div flex="30">建议人数</div>
+			<div flex="30">包厢规格</div>
+			<div flex></div>
+		</div>
+		<div class="t-body">
+			<form name="inputForm">
+				<div class="t-tr" layout="row" layout-wrap ng-repeat="type in boxTypeObj.typeList">
+					<div flex="30">
+						<input type="text" name="tableTypeName{{$index}}" ng-model="type.tableTypeName" required>
+						<div class="ng-msg" ng-messages="$eval('inputForm.tableTypeName'+$index+'.$error')">
+							<p ng-message="required" ng-if="$eval('inputForm.tableTypeName'+$index+'.$dirty')">*类型名称不能为空</p>
+						</div>
+					</div>
+					<div flex="30"><input type="text" ng-model="type.min" only-digits maxlength="2">&nbsp;-&nbsp;<input type="text" ng-model="type.max" only-digits maxlength="2"></div>
+					<div flex="30">
+						<md-select ng-model="type.localTypeId">
+							<md-option ng-repeat="boxType in baseBoxTypeList" value="{{boxType.id}}">
+							{{boxType.typeName + '(' + boxType.adCount + ')'}}
+							</md-option>
+						</md-select>
+					</div>
+					<div flex class="remove" ng-if="$index>0">
+						<i data-icon="&#xe61d;" ng-click="delBoxType($index)"></i>
+					</div>
+				</div>
+			</form>
+			<div class="t-tr">
+				<div class="add-item" ng-click="addBoxType()">
+					<i data-icon="&#xe607;"></i>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="submit-btn">
+		<md-button class="md-raised" ng-click="doSave()">保存</md-button>
+	</div>
+</md-dialog>

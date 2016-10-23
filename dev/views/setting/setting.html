@@ -1,0 +1,14 @@
+<div class="setting-wrapper">
+	<div class="setting-nav">
+		<ul>
+			<li ng-if="pageAuth[0].enable" data-ui-sref="setting.boxsetting" ng-class=""><md-button ng-if="!isTabActive('boxsetting')">包厢设置</md-button><span ng-if="isTabActive('boxsetting')">包厢设置</span></li>
+			<li ng-if="pageAuth[1].enable" data-ui-sref="setting.ordersetting" ng-class=""><md-button ng-if="!isTabActive('ordersetting')">预约设置</md-button><span ng-if="isTabActive('ordersetting')">预约设置</span></li>
+			<li ng-if="pageAuth[2].enable" data-ui-sref="setting.expenplansetting" ng-class=""><md-button ng-if="!isTabActive('expenplansetting')">计费方案设置</md-button><span ng-if="isTabActive('expenplansetting')">计费方案设置</span></li>
+			<li ng-if="pageAuth[3].enable" data-ui-sref="setting.mealsetting" ng-class=""><md-button ng-if="!isTabActive('mealsetting')">餐点设置</md-button><span ng-if="isTabActive('mealsetting')">餐点设置</span></li>
+			<li ng-if="pageAuth[4].enable" data-ui-sref="setting.membersetting" ng-class=""><md-button ng-if="!isTabActive('membersetting')">成员设置</md-button><span ng-if="isTabActive('membersetting')">成员设置</span></li>
+		</ul>
+	</div>
+	<div class="setting-detail">
+		<div ui-view></div>
+	</div>
+</div>

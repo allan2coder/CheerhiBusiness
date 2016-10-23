@@ -1,0 +1,13 @@
+<div class="sell-wrapper">
+	<div class="sell-nav">
+		<ul>
+			<li ng-if="pageAuth[0].enable" data-ui-sref="sell.couponManage"><md-button ng-if="!isTabActive('couponManage')">红包管理</md-button><span ng-if="isTabActive('couponManage')">红包管理</span></li>
+			<li ng-if="pageAuth[1].enable" data-ui-sref="sell.couponReport"><md-button ng-if="!isTabActive('couponReport')">红包报表</md-button><span ng-if="isTabActive('couponReport')">红包报表</span></li>
+			<li ng-if="pageAuth[2].enable" data-ui-sref="sell.memberManage"><md-button ng-if="!isTabActive('memberManage')">会员管理</md-button><span ng-if="isTabActive('memberManage')">会员管理</span></li>
+			<li ng-if="pageAuth[3].enable" data-ui-sref="sell.memberCardManage"><md-button ng-if="!isTabActive('memberCardManage')">会员卡管理</md-button><span ng-if="isTabActive('memberCardManage')">会员卡管理</span></li>
+		</ul>
+	</div>
+	<div class="sell-detail">
+		<div ui-view></div>
+	</div>
+</div>

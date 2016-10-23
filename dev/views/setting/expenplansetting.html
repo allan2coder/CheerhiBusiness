@@ -1,0 +1,10 @@
+<div class="expenplan-setting-component">
+	<div class="expenplan-type">
+		<md-radio-group ng-model="statuStore.expenplanTypeIndex">
+			<md-radio-button ng-value="0" class="md-primary">日常计费方案</md-radio-button>
+			<md-radio-button ng-value="1" class="md-primary">特殊日计费方案</md-radio-button>
+			<div class="clear"></div>
+		</md-radio-group>
+	</div>
+	<div class="expenplan-content" ui-view></div>
+</div>

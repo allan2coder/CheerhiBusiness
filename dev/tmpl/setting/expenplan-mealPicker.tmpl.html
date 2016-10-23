@@ -1,0 +1,53 @@
+<md-dialog class="expenplan-mealPicker">
+	<div class="title">添加活动餐点</div>
+	<div class="fields">
+		<div class="nav-header">
+			<md-radio-group ng-model="modalCache.renderObj.mealCateIndex" class="md-primary">
+				<md-radio-button ng-repeat="mealCate in mealCateList" ng-value="mealCate.cateIndex">
+					{{mealCate.cate}}
+				</md-radio-button>
+				<div class="clear"></div>
+			</md-radio-group>
+		</div>
+		<div class="sub-meal-list">
+			<ul class="clearfix">
+				<li ng-repeat="meal in mealCateList[modalCache.renderObj.mealCateIndex].mealList" ng-click="selectMeal(meal)" ng-class="{active:meal.checked}">
+					<div class="up">
+						<img ng-src="{{meal.fImg==''?'./img/blank.png':meal.fImg}}" alt="">
+					</div>
+					<div class="down">
+						<span ng-bind="meal.fName"></span>
+						<span ng-bind="'￥&nbsp;' + meal.fpPrice"></span>
+					</div>
+					<div class="overlay">
+						<i class="hover" data-icon="&#xe612;"></i>
+						<i class="selected" data-icon="&#xe613;"></i>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="selected-items" ng-if="modalCache.data.foodList.length > 0">
+		<div class="dscp" ng-bind="'选定的餐点（'+modalCache.data.foodList.length+'）'"></div>
+		<div class="list">
+			<ul>
+				<li class="item" ng-repeat="meal in modalCache.data.foodList">
+					<span ng-bind="modalCache.renderObj.selectedMealNameList[$index]" class="mealname"></span>
+					<div class="fr">
+						<div class="left">
+							<span class="sign">×</span>
+							<input type="text" ng-model="meal.count" readonly>
+						</div>
+						<div class="button">
+							<i class="add" data-icon="&#xe614;" ng-click="increaseCount(meal)"></i>
+							<i class="remove" data-icon="&#xe611;" ng-click="decreaseCount(meal,$index)"></i>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="submit-btn">
+		<md-button class="md-raised" ng-click="saveSelectedMeals()">保存</md-button>
+	</div>
+</md-dialog>

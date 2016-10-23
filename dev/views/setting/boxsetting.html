@@ -1,0 +1,88 @@
+<div class="box-setting-component">
+    <!-- 包厢类型 -->
+    <div class="box-setting-item box-type">
+        <div class="title">
+            包厢类型
+        </div>
+        <div class="settings">
+            <ul>
+                <li class="setting-item" ng-repeat="boxType in boxTypeList">
+                    {{boxType.type}}<br><span ng-bind="boxType.adCount"></span>
+                    <div class="handle-edit" ng-click="updateBoxType($event,$index)">编辑</div>
+                    <div class="handle-delete" data-icon="&#xe606;" ng-click="deleteItem($event,0,boxType.id)"></div>
+                </li>
+                <li class="add-item" ng-click="addBoxType($event)">
+                	<div>
+                        <i data-icon="&#xe607;"></i>
+                    </div>
+                </li>
+                <div class="clear"></div>
+            </ul>
+            <div class="remark">
+                *请在此处添加店铺所有的包厢类型。
+            </div>
+        </div>
+    </div>
+    <!-- 包厢主题 -->
+    <div class="box-setting-item box-theme">
+        <div class="title">
+            包厢主题
+        </div>
+        <div class="settings">
+            <ul>
+                <li class="setting-item" ng-class="{edit:boxTheme.edit}" ng-repeat="boxTheme in boxThemeList">
+                    <div ng-if="!boxTheme.edit">
+                        {{boxTheme.styleName}}
+                        <div class="handle-edit" ng-click="updateToogle(boxTheme.id)">编辑</div>
+                        <div class="handle-delete" data-icon="&#xe606;" ng-click="deleteItem($event,1,boxTheme.id)"></div>
+                    </div>
+                    <div ng-if="boxTheme.edit" class="box-theme-input">
+                        <form name="inputForm">
+                            <input type="text" ng-model="boxTheme.styleName" focus-me="boxTheme.edit" ng-blur="saveBoxTheme(boxTheme.id)" maxlength="10">
+                        </form>
+                    </div>
+                </li>
+                <li class="box-theme-input" ng-show="statuStore.boxThemeAdd">
+                    <form name="inputForm">
+                        <input type="text" focus-me="statuStore.boxThemeAdd" ng-blur="saveBoxTheme()" ng-model="boxThemeObj.styleName" on-enter="saveBoxTheme()" maxlength="10">
+                    </form>
+                </li>
+                <li class="add-item" ng-click="addBoxTheme()" ng-hide="statuStore.boxThemeAdd">
+                    <div>
+                        <i data-icon="&#xe607;"></i>
+                    </div>
+                </li>
+            </ul>
+            <div class="remark">
+                *请在此处添加店铺所有的包厢主题。
+            </div>
+        </div>
+    </div>
+    <!-- 房号管理 -->
+    <div class="box-setting-item box-number">
+        <div class="title">
+            房号管理
+        </div>
+        <div class="settings">
+            <div class="box-type-item" ng-repeat="boxType in boxTypeList">
+                <div class="box-type" ng-bind="boxType.type"></div>
+                <ul>
+                    <li class="setting-item" ng-repeat="boxNumber in boxNumberList" ng-if="boxNumber.typeId==$parent.boxType.id">
+                        {{boxNumber.tName}}
+                        <br><span>{{boxNumber.tStyle}}</span>
+                        <div class="handle-edit" ng-click="updateBoxNumber($event,$index)">编辑</div>
+                        <div class="handle-delete" data-icon="&#xe606;" ng-click="deleteItem($event,2,boxNumber.id)"></div>
+                    </li>
+                    <li class="add-item" ng-click="addBoxNumber($event,$index)">
+                        <div>
+                            <i data-icon="&#xe607;"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="remark">
+                *请在此处添加店铺所有的房间号码。
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,116 @@
+<!-- 时间选择器 -->
+<div class="time-picker datepickerdemoBasicUsage">
+    <div class="md-padding" ng-cloak style="padding:0;">
+        <div>
+            <div layout="row">
+                <md-input-container style="margin-right: 10px;">
+                    <md-select ng-model="currentYear">
+                        <md-option ng-repeat="year in years" value="{{year}}">{{year + '年'}}</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container>
+                    <md-select ng-model="currentMonth">
+                        <md-optgroup>
+                            <md-option ng-repeat="month in months" value="{{month}}">{{month + '月'}}</md-option>
+                        </md-optgroup>
+                    </md-select>
+                </md-input-container>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="finance-details">
+    <div class="finance-subnav">
+        <ul>
+            <li ng-class="{active: financeState.code == initState.code}" ng-repeat="financeState in financeStateArr" ng-click="switchStatus(financeState.code)">
+                <p>{{financeState.dscp}} <i class="info-icon" ng-mouseenter="isfold = 1" ng-mouseleave="isfold = 0"></i></p>
+                <h2><span>{{financeState.count}} <b>元</b></span></h2>
+                <div class="fold" ng-if="isfold">
+                    <div id="triangle-up">
+                        <div id="triangle-up2">
+                        </div>
+                    </div>
+                    <p>{{financeState.info}}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="finance-list">
+        <table>
+            <tr>
+                <th width="120" style="font-weight: 800;">日期</th>
+                <th width="140" style="font-weight: 800;">出账金额 <span>元</span></th>
+                <th width="76" style="font-weight: 800;">状态</th>
+                <th width="200">操作员</th>
+                <th width="118">提现时间</th>
+                <th width="60">操作流水号</th>
+            </tr>
+            <!-- 已出账 -->
+            <tr ng-repeat="list in orderList.data.dataList" ng-if="initState.code == 0 && list.cashValue != 0">
+                <td width="120">{{list.recordDate}}</td>
+                <td width="140">{{list.cashValue}}</td>
+                <td width="76">
+                    <p ng-if="list.applyState == 3">转账中</p>
+                    <md-button class="md-raised md-primary" ng-if="list.applyState == 1" ng-click="transfer(list.id)">提现</md-button>
+                    <md-button class="md-raised md-primary audit" ng-disabled="true" ng-if="list.applyState == 2">审核中</md-button>
+                    <p class="cash-out" ng-if="list.applyState == 4">已提现</p>
+                </td>
+                <td width="200">{{list.recordName?list.recordName:"-"}}</td>
+                <td width="118">{{list.opreateTime?list.opreateTime:"-"}}</td>
+                <td width="60">{{list.id?list.id:"-"}}</td>
+            </tr>
+            <!-- 已提现 -->
+            <tr ng-repeat="list in orderList.data.dataList" ng-if="list.cashValue != 0 && (initState.code == 1 && list.applyState == 2 || list.applyState == 3 || list.applyState == 4)">
+                <td width="120">{{list.recordDate}}</td>
+                <td width="140">{{list.cashValue}}</td>
+                <td width="76">
+                    <p ng-if="list.applyState == 3">转账中</p>
+                    <md-button class="md-raised md-primary" ng-if="list.applyState == 1" ng-click="transfer(list.id)">提现</md-button>
+                    <md-button class="md-raised md-primary audit" ng-disabled="true" ng-if="list.applyState == 2">审核中</md-button>
+                    <p class="cash-out" ng-if="list.applyState == 4">已提现</p>
+                </td>
+                <td width="200">{{list.recordName?list.recordName:"-"}}</td>
+                <td width="118">{{list.opreateTime?list.opreateTime:"-"}}</td>
+                <td width="60">{{list.id?list.id:"-"}}</td>
+            </tr>
+            <!-- 未提现 -->
+            <tr ng-repeat="list in orderList.data.dataList" ng-if="(initState.code == 2 && list.applyState == 1 ) && list.cashValue != 0">
+                <td width="120">{{list.recordDate}}</td>
+                <td width="140">{{list.cashValue}}</td>
+                <td width="76">
+                    <!-- <p ng-if="list.applyState == 3">转账中</p> -->
+                    <md-button class="md-raised md-primary" ng-click="transfer(list.id)">提现</md-button>
+                    <!-- 
+                    <md-button class="md-raised md-primary audit" ng-disabled="true" ng-if="list.applyState == 2">审核中</md-button>
+                    <p class="cash-out" ng-if="list.applyState == 4">已提现</p> -->
+                </td>
+                <td width="200">{{list.recordName?list.recordName:"-"}}</td>
+                <td width="118">{{list.opreateTime?list.opreateTime:"-"}}</td>
+                <td width="60">{{list.id?list.id:"-"}}</td>
+            </tr>
+        </table>
+        <!-- 空白页 -->
+        <div class="nodate" style="text-align: center;background-color: #fff;padding-bottom: 20%;" ng-if="initState.code == 0 && financeStateArr[0].count == 0">
+            <img src="img/weichuzhang.png" alt="">
+            <h1>还没有相关的订单</h1>
+            <p>这里可以先不管~</p>
+        </div>
+        <div class="nodate" style="text-align: center;background-color: #fff;padding-bottom: 20%;" ng-if="initState.code == 1 && financeStateArr[1].count == 0">
+            <img src="img/weichuzhang.png" alt="">
+            <h1>还没有相关的订单</h1>
+            <p>这里可以先不管~</p>
+        </div>
+        <div class="nodate" style="text-align: center;background-color: #fff;padding-bottom: 20%;" ng-if="initState.code == 2 &&financeStateArr[2].count == 0">
+            <img src="img/weichuzhang.png" alt="">
+            <h1>还没有相关的订单</h1>
+            <p>这里可以先不管~</p>
+        </div>
+    </div>
+</div>
+<!-- 1号2号的空白页 -->
+<!-- <div class="nodate" style="text-align: center;background-color: #fff;padding-bottom: 20%;" ng-if="!isShow">
+    <img src="img/weichuzhang.png" alt="">
+    <h1>没有账单信息</h1>
+    <p>明天再来看看</p>
+</div>
+ -->

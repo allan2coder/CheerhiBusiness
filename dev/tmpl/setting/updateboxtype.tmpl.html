@@ -1,0 +1,39 @@
+<md-dialog class="editboxtype">
+	<div class="title" ng-bind="'修改包厢类型'">
+	</div>
+	<div class="fields">
+		<div class="t-th" layout="row" layout-wrap>
+			<div flex="30">类型名称</div>
+			<div flex="33">建议人数</div>
+			<div flex>包厢规格</div>
+		</div>
+		<div class="t-body">
+			<form name="inputForm">
+				<div class="t-tr" layout="row" layout-wrap>
+					<div flex="30">
+						<input type="text" ng-model="boxTypeObj.type" name="tableTypeName" required>
+						<div class="ng-msg" ng-messages="inputForm.tableTypeName.$error">
+							<p ng-message="required">*类型名称不能为空</p>
+						</div>
+					</div>
+					<div flex="33"><input type="text" ng-model="boxTypeObj.min" only-digits maxlength="2">&nbsp;-&nbsp;<input type="text" ng-model="boxTypeObj.max" only-digits maxlength="2"></div>
+					<div flex>
+						<md-select ng-model="boxTypeObj.localTypeId">
+							<md-option ng-repeat="boxType in baseBoxTypeList" value="{{boxType.id}}">
+							{{boxType.typeName + '(' + boxType.adCount + ')'}}
+							</md-option>
+						</md-select>
+					</div>
+				</div>
+			</form>
+			<!-- <div class="t-tr">
+				<div class="add-item">
+					<i data-icon="&#xe607;"></i>
+				</div>
+			</div> -->
+		</div>
+	</div>
+	<div class="submit-btn">
+		<md-button class="md-raised" ng-click="doSave()">保存</md-button>
+	</div>
+</md-dialog>

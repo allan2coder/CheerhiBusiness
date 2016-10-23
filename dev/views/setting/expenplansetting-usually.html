@@ -1,0 +1,89 @@
+<!-- 日常计费方案 -->
+<div class="expenplanType-simple">
+	<div class="add-plan">
+		<md-button ng-click="showAdd(null)">
+			<i data-icon="&#xe607;"></i>新建日常计费方案
+		</md-button>
+	</div>
+	<div class="expenplans-list">
+		<div class="expenplan-item" ng-repeat="plan in simpleList">
+			<div class="base-info">
+				<div class="active-title">
+					<span ng-click="toogleUpdateBaseInfo('activeName',plan)" ng-bind="plan.activeName" ng-if="!plan.activeNameEdit"></span>
+					<input type="text" value="{{plan.activeName}}" ng-if="plan.activeNameEdit" focus-me="plan.activeNameEdit" ng-blur="updateBaseInfo($event,'activeName',plan)">
+				</div>
+				<div class="active-info">
+					<span class="info-name">活动概况</span>
+					<span ng-click="toogleUpdateBaseInfo('activeInfo',plan)" ng-bind="plan.activeInfo" ng-if="!plan.activeInfoEdit"></span>
+					<input type="text" value="{{plan.activeInfo}}" ng-if="plan.activeInfoEdit" focus-me="plan.activeInfoEdit" ng-blur="updateBaseInfo($event,'activeInfo',plan)">
+				</div>
+				<div class="active-detail">
+					<span class="info-name">活动说明</span>
+					<span ng-click="toogleUpdateBaseInfo('activeDetail',plan)" ng-bind="plan.activeDetail==''?'暂无':plan.activeDetail" ng-if="!plan.activeDetailEdit"></span>
+					<input type="text" value="{{plan.activeDetail}}" ng-if="plan.activeDetailEdit" focus-me="plan.activeDetailEdit" ng-blur="updateBaseInfo($event,'activeDetail',plan)">
+				</div>
+			</div>
+			<div class="plan-detail" ng-repeat="timepart in plan.timepart">
+				<div class="plan-dscp">
+					<span class="info-name" ng-if="$index==0">活动时段</span>
+					<span ng-if="$index>0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<!-- <span ng-bind="timepart.timepart" ng-if="!timepart.timepartEdit" ng-click="toggleUpdateTimepart(timepart)"></span>
+					<div class="timepart" ng-if="timepart.timepartEdit">
+						<input type="text" value="{{timepart.timepart.split('-')[0]}}" focus-me="timepart.timepartEdit" ng-blur="updateTimepart($event,'timeStart',timepart,plan.activeId)">
+						&nbsp;-&nbsp;
+						<input type="text" value="{{timepart.timepart.split('-')[1]}}" focus-me="timepart.timepartEditE" ng-blur="updateTimepart($event,'timeEnd',timepart,plan.activeId)">
+					</div> -->
+					<span ng-bind="timepart.timepart.split('-')[0]" ng-if="!timepart.timepartEditS" ng-click="timepart.timepartEditS=true"></span>
+					<div class="timepart" ng-if="timepart.timepartEditS">
+						<input type="text" value="{{timepart.timepart.split('-')[0]}}" focus-me="timepart.timepartEditS" ng-blur="updateTimepart($event,'timeStart',timepart,plan.activeId)">
+					</div>
+					&nbsp;-&nbsp;
+					<span ng-bind="timepart.timepart.split('-')[1]" ng-if="!timepart.timepartEditE" ng-click="timepart.timepartEditE=true"></span>
+					<div class="timepart" ng-if="timepart.timepartEditE">
+						<input type="text" value="{{timepart.timepart.split('-')[1]}}" focus-me="timepart.timepartEditE" ng-blur="updateTimepart($event,'timeEnd',timepart,plan.activeId)">
+					</div>
+					 ，
+					 <span class="time" ng-click="toggleUpdateTime('count',timepart)">
+					 	欢唱  
+						<span ng-bind="timepart.count" ng-if="!timepart.countEdit"></span>
+						<input type="text" value="{{timepart.count}}" ng-if="timepart.countEdit" focus-me="timepart.countEdit" ng-blur="updateTime($event,'count',timepart,plan.activeId)"> 小时
+					</span>，
+					<span class="lasttime" ng-click="toggleUpdateTime('lastTime',timepart)">
+						最晚离场时间 
+						<span ng-bind="timepart.lastTime" ng-if="!timepart.lastTimeEdit">></span>
+						<input type="text" value="{{timepart.lastTime}}" ng-if="timepart.lastTimeEdit" focus-me="timepart.lastTimeEdit" ng-blur="updateTime($event,'lastTime',timepart,plan.activeId,'timeEndFact')">
+					</span>
+					<i data-icon="&#xe60b;" ng-click="toogleActiveDetail(timepart)" ng-class="{open:timepart.isopen}"></i>
+				</div>
+				<div class="plan-table" ng-style="{'height':(timepart.isopen ? (80 * timepart.tableType.length + 110) + 'px' : '0px')}">
+					<div>
+						<table cellspacing="0">
+							<tr class="t-head">
+								<th>包厢类型</th>
+								<th>包含餐点</th>
+								<th colspan="7">每周定价<span>元</span></th>
+							</tr>
+							<tr class="weekdays">
+								<td colspan="2"></td>
+								<td ng-repeat="weekday in statuStore.weekdays" ng-bind="'周' + weekday"></td>
+							</tr>
+							<tr class="plan-detail-item" ng-repeat="tabletype in timepart.tableType">
+								<td class="box-type" ng-bind="tabletype.typeName"></td>
+								<td class="meal" ng-click="updateMeal(plan.activeId,tabletype.tableTypeId)">
+									<span data-icon="&#xe609;" title="{{tabletype.food}}">{{tabletype.food}}</span>
+								</td>
+								<td class="price" ng-repeat="weekday in statuStore.weekdays">
+									<input type="text" ng-model="tabletype.tablePrice['price_' + $index]" ng-blur="savePrice(tabletype.tablePrice['priceId_' + $index],$event,tabletype.tablePrice,$index)" ng-focus="focusPrice($event,tabletype.tablePrice,$index)">
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="button">
+				<md-button class="md-raised" ng-class="{enable:plan.disable}" ng-click="switchEnable($event,plan)" ng-bind="plan.disable?'启用':'停用'"></md-button>
+			</div>
+			<div class="handle-delete" data-icon="&#xe606;" ng-click="deleteItem($event,plan.activeId)"></div>
+		</div>
+	</div>
+</div>

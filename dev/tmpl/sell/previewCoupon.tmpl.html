@@ -1,0 +1,267 @@
+<md-dialog class="preview-coupon">
+	<div ng-if="modalCache.renderObj.previewStatus">
+		<div class="coupon-way" ng-if="modalCache.data.triggerType==1">
+			<i data-icon="&#xe61b;"></i>
+			<span>消费红包</span>
+		</div>
+		<div class="coupon-way" ng-if="modalCache.data.triggerType==2">
+			<i data-icon="&#xe618;"></i>
+			<span>分享红包</span>
+		</div>
+		<div class="coupon-way" ng-if="modalCache.data.triggerType==3">
+			<i data-icon="&#xe619;"></i>
+			<span>新人红包</span>
+		</div>
+		<div class="coupon-way" ng-if="modalCache.data.triggerType==4">
+			<i data-icon="&#xe61a;"></i>
+			<span>活动红包</span>
+		</div>
+		<div class="title" ng-bind="modalCache.data.cName"></div>
+		<!-- 发放条件 - 消费&分享 -->
+		<div class="section" ng-if="[1,2].indexOf(modalCache.data.triggerType) + 1">
+			<div class="header">
+				<div class="fl">
+					<i data-icon="&#xe61e;"></i>
+					发放条件
+				</div>
+				<div class="fr">
+					{{replaceAll(modalCache.data.sendTimeStart,'-','.')}}&nbsp;-&nbsp;{{replaceAll(modalCache.data.sendTimeEnd,'-','.')}}
+				</div>
+			</div>
+			<div class="main">
+				<ul class="clearfix">
+					<li ng-repeat="shopName in modalCache.helperObj.sendShopNameList track by $index" ng-bind="shopName"></li>
+				</ul>
+				<div class="summary">
+					完成&nbsp;{{modalCache.data.sendRange==1?'预定消费&nbsp;点餐消费':(modalCache.data.sendRange==2?'预定消费':'点餐消费')}}，&nbsp;满&nbsp;{{modalCache.data.getExceedValue}}&nbsp;元可获得。&nbsp;{{modalCache.data.isRepeatGet==1?'':'不'}}可重复获得。
+				</div>
+			</div>
+		</div>
+		<!-- 发放条件 - 关注&活动 -->
+		<div class="section" ng-if="[3,4].indexOf(modalCache.data.triggerType) + 1">
+			<div class="header">
+				<div class="fl">
+					<i data-icon="&#xe61e;"></i>
+					发放条件
+				</div>
+				<div class="fr">
+					{{replaceAll(modalCache.data.sendTimeStart,'-','.')}}&nbsp;-&nbsp;{{replaceAll(modalCache.data.sendTimeEnd,'-','.')}}
+				</div>
+			</div>
+			<div class="main">
+				<div class="summary">
+					在&nbsp;{{modalCache.data.publicName}}&nbsp;公众号下发放<br>
+					{{modalCache.data.brandName}}&nbsp;保留对此券的解释权
+				</div>
+			</div>
+		</div>
+		<!-- 使用条件 -->
+		<div class="section">
+			<div class="header">
+				<div class="fl">
+					<i data-icon="&#xe61e;"></i>
+					使用条件
+				</div>
+				<div class="fr">
+					{{replaceAll(modalCache.data.useTimeStart,'-','.')}}&nbsp;-&nbsp;{{replaceAll(modalCache.data.useTimeEnd,'-','.')}}
+				</div>
+			</div>
+			<div class="main">
+				<ul class="clearfix">
+					<li ng-repeat="shopName in modalCache.helperObj.useShopNameList track by $index" ng-bind="shopName"></li>
+				</ul>
+				<div class="summary">
+					完成&nbsp;{{modalCache.data.useRange==1?'预定消费&nbsp;点餐消费':(modalCache.data.useRange==2?'预定消费':'点餐消费')}}&nbsp;可使用。
+				</div>
+			</div>
+		</div>
+		<!-- 抵价红包 -->
+		<div class="section coupon-price" ng-if="modalCache.data.cType==1">
+			<div class="header">
+				<div class="fl">
+					<i data-icon="&#xe616;"></i>
+					抵价红包
+				</div>
+				<div class="fr">
+					共计&nbsp;{{calcTotalPrice(modalCache.data.couponDetailList)}}&nbsp;元
+				</div>
+			</div>
+			<div class="main">
+				<ul class="clearfix">
+					<li ng-repeat="coupon in modalCache.data.couponDetailList">{{coupon.ticketValue}}&nbsp;元&nbsp;&nbsp;×&nbsp;{{coupon.ticketCount}}&nbsp;个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;共计&nbsp;{{coupon.ticketValue * coupon.ticketCount}}&nbsp;元</li>
+				</ul>
+			</div>
+		</div>
+		<!-- 兑换红包 -->
+		<div class="section coupon-exchange" ng-if="modalCache.data.cType==2">
+			<div class="header">
+				<div class="fl">
+					<i data-icon="&#xe617;"></i>
+					兑换红包
+				</div>
+				<!-- <div class="fr" ng-bind="'共计&nbsp;'+calcTotalPriceExchange(modalCache.data.couponFoodList)+'&nbsp;元'"></div> -->
+			</div>
+			<div class="main">
+				<div class="line" layout="row" layout-wrap ng-repeat="coupon in modalCache.data.couponFoodList">
+					<div flex="35" ng-bind="modalCache.helperObj.useShopNameList[$index]"></div>
+					<div flex="25" ng-bind="coupon.foodName"></div>
+					<!-- <div flex="10" ng-bind="'×&nbsp;10&nbsp;个'"></div> -->
+					<div flex="10"></div>
+					<div flex ng-bind="'价值&nbsp;'+coupon.foodPrice+'&nbsp;元'"></div>
+				</div>
+			</div>
+		</div>
+		<md-dialog-actions layout="row" class="layout-row submit-btn">
+			<md-button class="md-raised edit" ng-click="backToEdit()">返回编辑</md-button>
+			<md-button class="md-raised confirm" ng-click="saveCoupon()">确定</md-button>
+		</md-dialog-actions>
+	</div>
+	<!-- 从列表查看详情 -->
+	<div ng-if="!modalCache.renderObj.previewStatus">
+		<div class="coupon-way" ng-if="modalCache.data.triggerType==1">
+			<i data-icon="&#xe61b;"></i>
+			<span>消费红包</span>
+		</div>
+		<div class="coupon-way" ng-if="modalCache.data.triggerType==2">
+			<i data-icon="&#xe618;"></i>
+			<span>分享红包</span>
+		</div>
+		<div class="coupon-way" ng-if="modalCache.data.triggerType==3">
+			<i data-icon="&#xe619;"></i>
+			<span>新人红包</span>
+		</div>
+		<div class="coupon-way" ng-if="modalCache.data.triggerType==4">
+			<i data-icon="&#xe61a;"></i>
+			<span>活动红包</span>
+		</div>
+		<div class="title" ng-bind="modalCache.data.cName"></div>
+		<div class="status">
+			发放&nbsp;&nbsp;{{modalCache.data.getCount}}/{{modalCache.data.sendCount}}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			兑换&nbsp;&nbsp;{{modalCache.data.useCount}}/{{modalCache.data.getCount}}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<span ng-if="modalCache.data.state==1">启用中</span>
+			<span ng-if="modalCache.data.state==2">停用中</span>
+			<span ng-if="modalCache.data.state==3">兑换中</span>
+			<span ng-if="modalCache.data.state==4">已失效</span>
+		</div>
+		<div class="run-info" ng-if="modalCache.data.triggerType==3||modalCache.data.triggerType==4">
+			<div class="qr">
+				<div class="copy">
+					<md-button ng-click="copyToClipboard(modalCache.data.urlKey)">点击复制活动地址</md-button>
+				</div>
+				<a href="{{modalCache.data.qrCodeUrl}}" download>
+					<div class="qr-img">
+						<img ng-src="{{modalCache.data.qrCodeUrl}}" alt="">
+						<div class="overlay">
+							<div class="icon"></div>
+							<div class="txt">
+								点击下载二维码
+							</div>
+						</div>
+					</div>
+				</a>
+				<div class="scan">
+					扫一扫二维码在手机上查看该活动
+				</div>
+			</div>
+		</div>
+		<!-- 发放条件 - 消费&分享 -->
+		<div class="section" ng-if="[1,2].indexOf(modalCache.data.triggerType) + 1">
+			<div class="header">
+				<div class="fl">
+					<i data-icon="&#xe61e;"></i>
+					发放条件
+				</div>
+				<div class="fr">
+					{{replaceAll(modalCache.data.sendTimeStart.split(' ')[0],'-','.')}}&nbsp;-&nbsp;{{replaceAll(modalCache.data.sendTimeEnd.split(' ')[0],'-','.')}}
+				</div>
+			</div>
+			<div class="main">
+				<ul class="clearfix">
+					<li ng-repeat="shopName in modalCache.data.sendShopList" ng-bind="shopName.shopName"></li>
+				</ul>
+				<div class="summary">
+					完成&nbsp;{{modalCache.data.sentRange==1?'预定消费&nbsp;点餐消费':(modalCache.data.sentRange==2?'预定消费':'点餐消费')}}，&nbsp;满&nbsp;{{modalCache.data.getExceedValue}}&nbsp;元可获得。&nbsp;{{modalCache.data.isRepeatGet==1?'':'不'}}可重复获得。
+				</div>
+			</div>
+		</div>
+		<!-- 发放条件 - 关注&活动 -->
+		<div class="section" ng-if="[3,4].indexOf(modalCache.data.triggerType) + 1">
+			<div class="header">
+				<div class="fl">
+					<i data-icon="&#xe61e;"></i>
+					发放条件
+				</div>
+				<div class="fr">
+					{{replaceAll(modalCache.data.sendTimeStart.split(' ')[0],'-','.')}}&nbsp;-&nbsp;{{replaceAll(modalCache.data.sendTimeEnd.split(' ')[0],'-','.')}}
+				</div>
+			</div>
+			<div class="main">
+				<div class="summary">
+					在&nbsp;{{modalCache.data.publicName}}&nbsp;公众号下发放<br>
+					{{modalCache.data.brandName}}&nbsp;保留对此券的解释权
+				</div>
+			</div>
+		</div>
+		<!-- 使用条件 -->
+		<div class="section">
+			<div class="header">
+				<div class="fl">
+					<i data-icon="&#xe61e;"></i>
+					使用条件
+				</div>
+				<div class="fr">
+					{{replaceAll(modalCache.data.useTimeStart.split(' ')[0],'-','.')}}&nbsp;-&nbsp;{{replaceAll(modalCache.data.useTimeEnd.split(' ')[0],'-','.')}}
+				</div>
+			</div>
+			<div class="main">
+				<ul class="clearfix">
+					<li ng-repeat="shop in modalCache.data.useShopList" ng-bind="shop.shopName"></li>
+				</ul>
+				<div class="summary">
+					完成&nbsp;{{modalCache.data.useRange==1?'预定消费&nbsp;点餐消费':(modalCache.data.useRange==2?'预定消费':'点餐消费')}}&nbsp;可使用。
+				</div>
+			</div>
+		</div>
+		<!-- 抵价红包 -->
+		<div class="section coupon-price" ng-if="modalCache.data.cType==1">
+			<div class="header">
+				<div class="fl">
+					<i data-icon="&#xe616;"></i>
+					抵价红包
+				</div>
+				<div class="fr">
+					共计&nbsp;{{calcTotalPrice(modalCache.data.detailList)}}&nbsp;元
+				</div>
+			</div>
+			<div class="main">
+				<ul class="clearfix">
+					<li ng-repeat="coupon in modalCache.data.detailList">{{coupon.ticketValue}}&nbsp;元&nbsp;&nbsp;×&nbsp;{{coupon.ticketCount}}&nbsp;个&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;共计&nbsp;{{coupon.ticketValue * coupon.ticketCount}}&nbsp;元</li>
+				</ul>
+			</div>
+		</div>
+		<!-- 兑换红包 -->
+		<div class="section coupon-exchange" ng-if="modalCache.data.cType==2">
+			<div class="header">
+				<div class="fl">
+					<i data-icon="&#xe617;"></i>
+					兑换红包
+				</div>
+				<!-- <div class="fr" ng-bind="'共计&nbsp;'+calcTotalPriceExchange(modalCache.data.foodList)+'&nbsp;元'"></div> -->
+			</div>
+			<div class="main">
+				<div class="line" layout="row" layout-wrap ng-repeat="coupon in modalCache.data.foodList">
+					<div flex="35" ng-bind="modalCache.data.useShopList[$index].shopName"></div>
+					<div flex="25" ng-bind="coupon.foodName"></div>
+					<!-- <div flex="10" ng-bind="'×&nbsp;10&nbsp;个'"></div> -->
+					<div flex="10"></div>
+					<!-- <div flex ng-bind="'价值&nbsp;'+coupon.foodPrice+'&nbsp;元'"></div> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="overlay" ng-if="modalCache.renderObj.submitted">
+		<md-progress-circular md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+	</div>
+</md-dialog>

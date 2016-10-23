@@ -1,0 +1,25 @@
+<div class="logo-container">
+	去嗨商家
+</div>
+<div class="right-container">
+	<div class="shop-dropdown">
+		<md-select ng-model="shopIndex" class="cheer-md-select">
+			<md-option ng-repeat="shop in shopArr" value="{{$index}}">
+			{{shop.shopName}}
+			</md-option>
+		</md-select>
+	</div>
+	<div class="profile fr">
+		<div class="msg" ng-class="{'unread':msgUnread.flag}" ng-click="readMail()">
+			<i data-icon="&#xe60a;"></i>
+		</div>
+		<div class="user">
+			<div class="user-img">
+				<md-select ng-model="rightMenuFlag">
+					<md-option value="logout">退出</md-option>
+				</md-select>
+			</div>
+			<div class="username" ng-bind="userInfo.name"></div>
+		</div>
+	</div>
+</div>

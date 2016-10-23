@@ -1,0 +1,243 @@
+<!-- 预订确认 -->
+<!-- 筛选菜单 -->
+<div class="toper-menu" ng-if="$parent.flag == false">
+    <md-radio-group ng-model="initState.code" ng-change="radioSwitch()">
+        <md-radio-button ng-repeat="stateInfo in manageStateArr" ng-value="stateInfo.code" class="md-primary">
+            {{stateInfo.dscp}} <span ng-bind=" '(' + stateInfo.sum + ')' "></span>
+        </md-radio-button>
+        <div class="clear"></div>
+    </md-radio-group>
+</div>
+<div class="order-wrapper">
+    <!-- 手动添加预约订单 -->
+    <!--     <div class="add-book-order">
+        <i data-icon="&#xe607;"></i> 手动添加预约订单
+    </div> -->
+    <!-- 订单列表 -->
+    <div class="order-list">
+        <ul>
+            <!-- 正常加载列表 -->
+            <li ng-repeat="orderInfo in orderList.orderList" ng-class="{unRead:orderInfo.isRead == 0}" ng-if="$parent.flag == false">
+                <div class="order-header">
+                    <p class="time" data-icon="&#xe60e;">
+                        {{orderInfo.startTime}}
+                    </p>
+                    <a class="print fr" target="_blank" href="page/printOrder.html?shopId={{userInfo.shopId}}&orderNum={{orderInfo.orderNum}}" data-icon="&#xe622;">打印</a>
+                </div>
+                <div class="order-body clearfix">
+                    <!-- 左1 -->
+                    <div class="order-info">
+                        <div class="user-info">
+                            <img ng-if="orderInfo.userImg != ''" src="" ng-src="{{orderInfo.userImg}}" alt="" />
+                            <img ng-if="orderInfo.userImg == ''" src="img/avatar2.png" alt="" />
+                            <div>
+                                <p>{{orderInfo.userPhone}}</p>
+                                <p class="name">{{orderInfo.userName}}</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <p class="order-num">
+                                订单<span class="hoverLnk" ng-mouseenter="hover = true" ng-mouseleave="hover = false"> {{orderInfo.orderNum}}</span>
+                            </p>
+                            <p>活动<span>{{orderInfo.activeName?orderInfo.activeName:'无'}}</span></p>
+                            <p>备注<span>{{orderInfo.userMsg?orderInfo.userMsg:"无"}}</span></p>
+                        </div>
+                    </div>
+                    <div class="type-btn fr">
+                        <!-- 包厢号 -->
+                        <md-button class="md-primary md-raised" ng-click="showTabDialog($event, orderInfo)" ng-if="orderInfo.tableName == ''" ng-mouseover="orderInfo.isShow = 1" ng-mouseout="orderInfo.isShow = 0">
+                            <span ng-show="!orderInfo.isShow">
+                                {{orderInfo.tableTypeName}}
+                                <span class="box-style">{{orderInfo.tableName?orderInfo.tableName:'未指定'}}</span>
+                            </span>
+                            <span ng-show="orderInfo.isShow">指定包厢</span>
+                        </md-button>
+                        <md-button class="md-primary md-raised" ng-click="showTabDialog($event, orderInfo)" ng-if="orderInfo.tableName != '' && initState.code != 4" ng-hover="orderInfo.isShow = 1" ng-mouseout="orderInfo.isShow = 0">
+                            <span>
+                                {{orderInfo.tableTypeName}}
+                                <span class="box-style">{{orderInfo.tableName?orderInfo.tableName:'未指定'}}</span>
+                            </span>
+                            <span ng-show="orderInfo.isShow">指定包厢</span>
+                        </md-button>
+                        <md-button class="md-primary md-raised orderOverBoxState" ng-if="orderInfo.tableName != '' && initState.code == 4">
+                            {{orderInfo.tableTypeName}}
+                            <span class="box-style">{{orderInfo.tableName?orderInfo.tableName:'未指定'}}</span>
+                        </md-button>
+                        <!-- 现场付款 -->
+                        <div class="pay-way1" ng-if="orderInfo.cashState == 5 || orderInfo.cashState == 6">
+                            <!-- 待付款：商户预订 -->
+                            <button class="type-code localToPay" ng-if="orderInfo.codeStatus == underfined && initState.code == 3 && orderInfo.siteType == 2" ng-click="typeSwitch2($index)">现场收款</button>
+                            <button class="type-code localToPay" ng-if="orderInfo.codeStatus == underfined && initState.code == 3 && orderInfo.siteType == 1" ng-click="localPaied($event, $index, orderInfo.orderNum, orderInfo.price)">现场收款</button>
+                            <!-- 待付款：客户端预订 -->
+                            <!-- <button class="type-code localToPay" ng-if="orderInfo.codeStatus == underfined && initState.code == 3 && orderInfo.siteType == 1">{{orderInfo.payCash}}元</button> -->
+                            <input ng-if="orderInfo.codeStatus == 5 && initState.code == 3" type="text" class="type-code-input type-code" placeholder="输入金额" focus-me="orderInfo.codeStatus == 0" ng-blur="localPay(orderInfo.getCash, orderInfo.orderNum, $index, $event)" ng-model="orderInfo.getCash">
+                            <i ng-if="orderInfo.codeStatus == 5 && initState.code == 3" class="yuan">元</i>
+                            <button class="type-code localPay" ng-if="initState.code == 3 && orderInfo.codeStatus == 6">实收{{orderInfo.getCash}}元</button>
+                            <button class="type-code localPay" ng-if="initState.code == 4" style="cursor:auto;">已收款</button>
+                        </div>
+                        <!-- 线上付款 -->
+                        <div class="pay-way2" ng-if="orderInfo.cashState != 6">
+                            <button class="type-code" ng-if="orderInfo.codeStatus == underfined && initState.code != 4 && initState.code != 3 && orderInfo.siteType == 1" ng-click="typeSwitch($index)">输入消费码</button>
+                            <button class="type-code" ng-if="orderInfo.codeStatus == underfined && initState.code != 4 && initState.code != 3 && orderInfo.siteType == 2" ng-click="arrived($event, $index, orderInfo.orderNum)">确认到达</button>
+                            <input type="text" class="type-code-input type-code" placeholder="输入消费码" focus-me="orderInfo.codeStatus == 0" ng-blur="submitPrice($index,$event)" ng-if="orderInfo.codeStatus == 0 || orderInfo.codeStatus == 2 && initState.code != 3" ng-class="{typeFalse: orderInfo.codeStatus == 2}">
+                            <button class="type-code" ng-if="orderInfo.codeStatus == underfined && initState.code == 4" ng-class="{orderOver: initState.code == 4}" style="cursor: auto;">已核销</button>
+                            <div class="type-code ok-code" ng-if="orderInfo.codeStatus == 1">{{consumeCode}}</div>
+                        </div>
+                    </div>
+                    <!-- 价格 -->
+                    <!--  ng-if="orderInfo.cashState != 5 && orderInfo.cashState != 6" -->
+                    <div class="price fr">
+                        <p><em class="total">总计</em><span>{{orderInfo.price}}</span><em class="yuan">元</em></p>
+                        <p class="actual-pay">
+                            <span style="margin-right: 20px;">
+                                <em class="total">红包</em><span>- {{orderInfo.couponValue}}</span><em class="yuan">元</em>
+                            </span>
+                            <span>
+                                <em class="total">实付</em><span>{{orderInfo.payCash}}</span><em class="yuan">元</em>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </li>
+            <!-- 搜索列表 -->
+           <!--  <li ng-repeat="orderInfo in orderList.data" ng-class="{unRead:orderInfo.isRead == 0}" ng-if="$parent.flag == true && orderInfo.type == 1">
+                <div class="order-header">
+                    <p class="time" data-icon="&#xe60e;">
+                        {{orderInfo.startTime}}
+                    </p>
+                    <a class="print fr" target="_blank" href="page/printOrder.html?orderInfo={{shopId}}&orderNum={{orderInfo.orderNum}}" data-icon="&#xe622;">打印</a>
+                </div>
+                <div class="order-body clearfix">
+                    <div class="order-info">
+                        <div class="user-info">
+                            <img ng-if="orderInfo.userImg != ''" src="" ng-src="{{orderInfo.userImg}}" alt="" />
+                            <img ng-if="orderInfo.userImg == ''" src="img/avatar2.png" alt="" />
+                            <div>
+                                <p>{{orderInfo.userPhone}}</p>
+                                <p class="name">{{orderInfo.userName}}</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <p class="order-num">
+                                订单<span class="hoverLnk" ng-mouseenter="hover = true" ng-mouseleave="hover = false">{{orderInfo.orderNum}}</span>
+                            </p>
+                            <p>活动<span>{{orderInfo.activeName?orderInfo.activeName:'无'}}</span></p>
+                            <p>备注<span>{{orderInfo.userMsg?orderInfo.userMsg:"无"}}</span></p>
+                        </div>
+                    </div>
+                    <div class="type-btn fr">
+                        <md-button class="md-primary md-raised" ng-click="showTabDialog($event, orderInfo)" ng-if="orderInfo.tableName == ''">
+                            {{orderInfo.tableTypeName}}
+                            <span class="box-style">{{orderInfo.tableName?orderInfo.tableName:'未指定'}}</span>
+                        </md-button>
+                        <md-button class="md-primary md-raised" ng-click="showTabDialog($event, orderInfo)" ng-if="orderInfo.tableName != '' && initState.code != 4">
+                            {{orderInfo.tableTypeName}}
+                            <span class="box-style">{{orderInfo.tableName?orderInfo.tableName:'未指定'}}</span>
+                        </md-button>
+                        <button class="orderOverBoxState" ng-if="orderInfo.tableName != '' && initState.code == 4">
+                            {{orderInfo.tableTypeName}}
+                            <span class="box-style">{{orderInfo.tableName?orderInfo.tableName:'未指定'}}</span>
+                        </button> -->
+                        <!-- 现场付款 -->
+                        <!-- <div class="pay-way1" ng-if="orderInfo.cashState == 5 || orderInfo.cashState == 6">
+                            <button class="type-code localToPay" ng-if="orderInfo.codeStatus == underfined && initState.code == 3 && orderInfo.siteType == 2" ng-click="typeSwitch2($index)">现场收款</button>
+                            <button class="type-code localToPay" ng-if="orderInfo.codeStatus == underfined && initState.code == 3 && orderInfo.siteType == 1" ng-click="localPaied($event, $index, orderInfo.orderNum)" style="background-color: red;">现场收款</button>
+                            <button class="type-code localToPay" ng-if="orderInfo.codeStatus == underfined && initState.code == 3 && orderInfo.siteType == 1">{{orderInfo.payCash}}</button>
+                            <input ng-if="orderInfo.codeStatus == 5 && initState.code == 3" type="text" class="type-code-input type-code" placeholder="输入金额" focus-me="orderInfo.codeStatus == 0" ng-blur="localPay(orderInfo.getCash, orderInfo.orderNum, $index, $event)" ng-model="orderInfo.getCash">
+                            <i ng-if="orderInfo.codeStatus == 5 && initState.code == 3" class="yuan">元</i>
+                            <button class="type-code localPay" ng-if="initState.code == 3 && orderInfo.codeStatus == 6">实收{{orderInfo.getCash}}元</button>
+                            <button class="type-code localPay" ng-if="initState.code == 4">已收款</button>
+                        </div> -->
+                        <!-- 线上付款 -->
+                        <!-- <div class="pay-way2" ng-if="orderInfo.cashState != 6">
+                            <button class="type-code" ng-if="orderInfo.codeStatus == underfined && initState.code != 4 && initState.code != 3" ng-click="typeSwitch($index)">输入消费码</button>
+                            <button class="type-code" ng-if="orderInfo.codeStatus == underfined && initState.code != 4 && initState.code != 3 && orderInfo.siteType == 2" ng-click="arrived($event, $index, orderInfo.orderNum)">确认到达</button>
+                            <input type="text" class="type-code-input type-code" placeholder="输入消费码" focus-me="orderInfo.codeStatus == 0" ng-blur="submitPrice($index,$event)" ng-if="orderInfo.codeStatus == 0 || orderInfo.codeStatus == 2 && initState.code != 3" ng-class="{typeFalse: orderInfo.codeStatus == 2}">
+                            <button class="type-code" ng-if="orderInfo.codeStatus == underfined && initState.code == 4" ng-class="{orderOver: initState.code == 4}">已核销</button>
+                            <div class="type-code ok-code" ng-if="orderInfo.codeStatus == 1">{{consumeCode}}</div>
+                        </div> -->
+                    <!-- </div> -->
+                    <!-- 价格 -->
+                   <!--  <div class="price fr">
+                        <p><em class="total">总计</em><span>{{orderInfo.cashValue}}</span><em class="yuan">元</em></p>
+                        <p class="actual-pay" ng-if="orderInfo.userCouponId != 0"><em class="total">实付</em><span>{{orderInfo.payCash}}</span><em class="yuan">元</em></p>
+                    </div> -->
+                <!-- </div> -->
+            <!-- </li> -->
+        <!-- </ul> -->
+        <!-- 空白页面 -->
+        <div class="nodate" ng-if="orderList.orderList.length === 0" style="text-align: center;">
+            <img src="img/no_tuidan.png" alt="">
+            <h1>还没人找你预订</h1>
+            <p>做生意也要沉得住气</p>
+        </div>
+    </div>
+</div>
+<!-- 选包厢弹窗 -->
+<script type="text/ng-template" id="boxPickDialog.tmpl.html">
+    <md-dialog style="padding: 20px;" class="order-dialog-wrapper">
+        <form>
+            <md-toolbar>
+                <div class="md-toolbar-tools" style="background-color: rgb(255,255,255)!important;">
+                    <h2>指定包厢</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content style="max-height:810px;">
+                <div class="md-dialog-content md-box-list clearfix">
+                    <ul>
+                        <li ng-repeat="box in boxList" ng-click="pickBox(box.tableId)" ng-class="{getBox: box.tableId==newTableId}">
+                            <button>
+                                {{box.tableTypeName}}
+                                <p>{{box.tableName?box.tableName:'无'}}</p>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <md-button class="dialog-btn" ng-click="boxSubmit()" style="margin-right:20px;">
+                    确定
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+<!-- 关联订单弹窗 -->
+<script type="text/ng-template" id="bookTabDialog.tmpl.html">
+    <md-dialog aria-label="Mango (Fruit)" style="padding: 20px;" class="food-dialog-wrapper">
+        <form>
+            <md-dialog-content style="max-width:800px;max-height:810px;">
+                <div class="md-dialog-content md-box clearfix">
+                    <div class="foodConfirm-header">
+                        <p class="time" data-icon="&#xe60e;">{{orderInfo.startTime}}</p>
+                        <p class="order-num fr">
+                            <span>订单 {{orderInfo.orderNum}}</span>
+                        </p>
+                    </div>
+                    <div class="foodConfirm-body clearfix">
+                        <div class="order-info">
+                            <div class="user-info">
+                                <img src="img/avatar2.png" alt="">
+                                <div>
+                                    <p>{{orderInfo.userPhone}}</p>
+                                    <p class="name">{{orderInfo.userName}}</p>
+                                </div>
+                            </div>
+                            <div class="activity">
+                                <p>活动<span>{{orderInfo.activeName?orderInfo.activeName:'无'}}</span></p>
+                                <p>备注<span>{{orderInfo.userMsg?orderInfo.userMsg:'无'}}</span></p>
+                            </div>
+                        </div>
+                        <div class="price">
+                            <p ng-if="$parent.flag == false"><em class="total">总计</em><span>{{orderInfo.price}}</span><em class="yuan">元</em></p>
+                            <p ng-if="$parent.flag == true"><em class="total">总计</em><span>{{orderInfo.cashValue}}</span><em class="yuan">元</em></p>
+                            <p class="actual-pay"><em class="total">实付</em><span>{{orderInfo.payCash}}</span><em class="yuan">元</em></p>
+                            <button>未到达</button>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</script>

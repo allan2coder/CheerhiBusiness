@@ -1,0 +1,325 @@
+<md-dialog class="addcoupon">
+	<div class="title">
+		新建红包
+	</div>
+	<div class="tabs">
+		<div class="s1" ng-class="{active:modalCache.renderObj.stepIndex==1}" ng-click="toStepFst()"><span>1</span>创建活动</div>
+		<div class="s2" ng-class="{active:modalCache.renderObj.stepIndex==2}" ng-click="toStepSec()"><span>2</span>添加发放条件</div>
+		<div class="s3" ng-class="{active:modalCache.renderObj.stepIndex==3}" ng-click="toStepThi()"><span>3</span>添加使用条件</div>
+		<div class="s4" ng-class="{active:modalCache.renderObj.stepIndex==4}" ng-click="toStepFor()"><span>4</span>添加红包</div>
+	</div>
+	<div class="scroll-container">
+		<div class="main s{{modalCache.renderObj.stepIndex}}">
+			<div class="base-info">
+				<form name="inputForm1">
+					<div class="line" layout="row" layout-wrap>
+						<div class="label" flex="15">红包名称</div>
+						<div class="coupon-name" flex>
+							<input type="text" ng-model="modalCache.data.cName" name="cName" required maxlength="20" pattern=".*[\u4e00-\u9fa5].*">
+							<div class="ng-msg" ng-messages="inputForm1.cName.$error" ng-if="inputForm1.cName.$dirty">
+								<p ng-message="required">*红包名称不能为空</p>
+								<p ng-message="pattern">*红包名称必须包含中文名</p>
+							</div>
+						</div>
+					</div>
+					<div class="line" layout="row" layout-wrap>
+						<div class="label" flex="15">红包类型</div>
+						<div class="trigger-types" flex>
+							<div class="trigger-type clearfix" ng-class="{active:modalCache.data.triggerType==1}" ng-click="modalCache.data.triggerType=1">
+								<div class="ico">
+									<i data-icon="&#xe61b;"></i>
+								</div>
+								<div class="trigger-type-name">
+									消费红包<br>
+									<span>满足消费条件后赠予的红包，能够刺激消费额提升与二次消费产生。</span>
+								</div>
+							</div>
+							<div class="trigger-type clearfix" ng-class="{active:modalCache.data.triggerType==2}" ng-click="modalCache.data.triggerType=2">
+								<div class="ico">
+									<i data-icon="&#xe619;"></i>
+								</div>
+								<div class="trigger-type-name">
+									分享红包<br>
+									<span>满足消费后进行分享所赠予的红包，有助于商家做线上传播。</span>
+								</div>
+							</div>
+							<div class="trigger-type clearfix" ng-class="{active:modalCache.data.triggerType==3}" ng-click="modalCache.data.triggerType=3">
+								<div class="ico">
+									<i data-icon="&#xe618;"></i>
+								</div>
+								<div class="trigger-type-name">
+									新人红包<br>
+									<span>针对新人关注所赠予的红包，能够帮助商家公众号增长粉丝。</span>
+								</div>
+							</div>
+							<div class="trigger-type clearfix" ng-class="{active:modalCache.data.triggerType==4}" ng-click="modalCache.data.triggerType=4">
+								<div class="ico">
+									<i data-icon="&#xe61a;"></i>
+								</div>
+								<div class="trigger-type-name">
+									活动红包<br>
+									<span>开展店铺促销，面向消费者无条件领取的红包。</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="send-condition">
+				<form name="inputForm2">
+					<div class="type1" ng-if="[2,3,4].indexOf(modalCache.data.triggerType) + 1">
+						<div class="line" layout="row" layout-wrap>
+							<div class="label" flex="15">发放时间</div>
+							<div class="send-timepart" flex>
+								<md-datepicker ng-model="modalCache.helperObj.sendTimeStart" 　md-min-date="yesterday"></md-datepicker>
+								<span class="dash">&nbsp;-&nbsp;</span>
+								<md-datepicker ng-model="modalCache.helperObj.sendTimeEnd" md-min-date="modalCache.helperObj.sendTimeStart"></md-datepicker>
+							</div>
+						</div>
+						<div class="line" layout="row" layout-wrap>
+							<div class="label" flex="15">公众号</div>
+							<div class="send-wxaccount" flex>
+								<input type="text" ng-model="modalCache.data.publicName" name="publicName" required maxlength="20">
+								<div class="ng-msg" ng-messages="inputForm2.publicName.$error" ng-if="inputForm2.publicName.$dirty">
+									<p ng-message="required">*公众号不能为空</p>
+								</div>
+							</div>
+						</div>
+						<div class="line" layout="row" layout-wrap>
+							<div class="label" flex="15">品牌名称</div>
+							<div class="send-brandname" flex>
+								<input type="text" ng-model="modalCache.data.brandName" name="brandName" required maxlength="20">
+								<div class="ng-msg" ng-messages="inputForm2.brandName.$error" ng-if="inputForm2.brandName.$dirty">
+									<p ng-message="required">*品牌名称不能为空</p>
+								</div>
+							</div>
+						</div>
+						<div class="line" layout="row" layout-wrap>
+							<div class="label" flex="15">分享词</div>
+							<div class="send-brandname" flex>
+								<input type="text" ng-model="modalCache.data.message" name="message" required maxlength="100">
+								<div class="ng-msg" ng-messages="inputForm2.message.$error" ng-if="inputForm2.message.$dirty">
+									<p ng-message="required">*分享词不能为空</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="type2" ng-if="[1,2].indexOf(modalCache.data.triggerType) + 1">
+						<div class="line" layout="row" layout-wrap ng-if="[1].indexOf(modalCache.data.triggerType) + 1">
+							<div class="label" flex="15">发放时间</div>
+							<div class="send-timepart" flex>
+								<md-datepicker ng-model="modalCache.helperObj.sendTimeStart" md-min-date="yesterday"></md-datepicker>
+								<span class="dash">&nbsp;-&nbsp;</span>
+								<md-datepicker ng-model="modalCache.helperObj.sendTimeEnd" md-min-date="modalCache.helperObj.sendTimeStart"></md-datepicker>
+							</div>
+						</div>
+						<div class="line send-shops" layout="row" layout-wrap>
+							<div class="label" flex="15">发放门店</div>
+							<div flex>
+								<md-checkbox class="md-primary" ng-repeat="shop in modalCache.renderObj.shopList" ng-checked="isShopSelected(modalCache.data.sendShopIdList,shop.shopId)" ng-click="toogleSendShopSelection(modalCache.data.sendShopIdList,shop.shopId,shop.shopName)">
+									{{shop.shopName}}
+								</md-checkbox>
+							</div>
+						</div>
+						<div class="line" layout="row" layout-wrap>
+							<div class="label" flex="15">发放范围</div>
+							<div class="send-range" flex>
+								<md-checkbox class="md-primary" ng-click="checkRange(0,2)" ng-checked="modalCache.data.sendRange==1||modalCache.data.sendRange==2">
+									预定消费
+								</md-checkbox>
+								<md-checkbox class="md-primary" ng-click="checkRange(0,3)" ng-checked="modalCache.data.sendRange==1||modalCache.data.sendRange==3">
+									点餐消费
+								</md-checkbox>
+							</div>
+						</div>
+						<div class="line" layout="row" layout-wrap>
+							<div class="label" flex="15">发放条件</div>
+							<div class="send-condition-price" flex>
+								<span>消费满</span>
+								<div class="value-input">
+									<span data-icon="&#xe61c;"></span><input type="text" ng-model="modalCache.data.getExceedValue"><span>元</span>
+								</div>
+								<span>可获得</span>
+							</div>
+						</div>
+						<div class="line" layout="row" layout-wrap>
+							<div class="label" flex="15">发放方式</div>
+							<div class="send-way" flex>
+								<md-radio-group ng-model="modalCache.data.isRepeatGet" class="clearfix">
+									<md-radio-button ng-value="1" class="md-primary">可重复获得</md-radio-button>
+									<md-radio-button ng-value="0" class="md-primary">不可重复获得</md-radio-button>
+									<div class="clear"></div>
+								</md-radio-group>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="use-condition">
+				<form name="inputForm3">
+					<div class="line" layout="row" layout-wrap>
+						<div class="label" flex="15">使用时间</div>
+						<div class="use-timepart" flex>
+							<md-datepicker ng-model="modalCache.helperObj.useTimeStart" 　md-min-date="yesterday"></md-datepicker>
+							<span class="dash">&nbsp;-&nbsp;</span>
+							<md-datepicker ng-model="modalCache.helperObj.useTimeEnd" md-min-date="modalCache.helperObj.useTimeStart"></md-datepicker>
+						</div>
+					</div>
+					<div class="line use-shops" layout="row" layout-wrap>
+						<div class="label" flex="15">使用门店</div>
+						<div flex>
+							<md-checkbox class="md-primary" ng-repeat="shop in modalCache.renderObj.shopList" ng-checked="isShopSelected(modalCache.data.useShopIdList,shop.shopId)" ng-click="toogleUseShopSelection(modalCache.data.useShopIdList,shop.shopId,shop.shopName)">
+								{{shop.shopName}}
+							</md-checkbox>
+						</div>
+					</div>
+					<div class="line" layout="row" layout-wrap>
+						<div class="label" flex="15">使用范围</div>
+						<div class="use-range" flex>
+							<md-checkbox class="md-primary" ng-click="checkRange(1,2)" ng-checked="modalCache.data.useRange==1||modalCache.data.useRange==2">
+								预定消费
+							</md-checkbox>
+							<md-checkbox class="md-primary" ng-click="checkRange(1,3)" ng-checked="modalCache.data.useRange==1||modalCache.data.useRange==3">
+								点餐消费
+							</md-checkbox>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="add-coupon">
+				<form name="inputForm4">
+					<div class="type-nav">
+						<md-radio-group ng-model="modalCache.data.cType" class="clearfix">
+							<md-radio-button class="md-primary" ng-value="1">抵价红包</md-radio-button>
+							<md-radio-button class="md-primary" ng-value="2">餐点兑换红包</md-radio-button>
+							<div class="clear"></div>
+						</md-radio-group>
+					</div>
+					<!-- 抵价红包 -->
+					<div class="add-coupon-container type1" ng-if="modalCache.data.cType==1">
+						<div class="header" layout="row" layout-wrap>
+							<div flex="20">面值&nbsp;<span>/券</span></div>
+							<div flex="5"></div>
+							<div flex="20">数量&nbsp;<span ng-show="modalCache.data.triggerType==2">/次</span></div>
+							<div flex="5"></div>
+							<div flex="25"></div>
+							<div flex="20">价值<span>&nbsp;&nbsp;元</span></div>
+							<div flex></div>
+						</div>
+						<div class="coupon-list">
+							<div class="line" layout="row" layout-wrap ng-repeat="coupon in modalCache.helperObj.couponDetailList1 track by $index">
+								<div flex="20">
+									<div class="input-component">
+										<input type="text" ng-model="coupon.ticketValue" ng-change="calc()" name="ticketValue{{$index}}" required pattern="[1-9]\d*" only-price>
+										<span>元</span>
+									</div>
+									<div class="ng-msg" ng-messages="$eval('inputForm4.ticketValue'+$index+'.$error')" ng-if="$eval('inputForm4.ticketValue'+$index+'.$dirty')">
+										<p ng-message="required">*红包金额不能为空</p>
+										<p ng-message="pattern">*红包金额不能为0</p>
+									</div>
+								</div>
+								<div flex="5"></div>
+								<div flex="20">
+									<div class="input-component">
+										<input type="text" ng-model="coupon.ticketCount" only-digits name="ticketCount{{$index}}" required>
+										<span>个</span>
+									</div>
+									<div class="ng-msg" ng-messages="$eval('inputForm4.ticketCount'+$index+'.$error')" ng-if="$eval('inputForm4.ticketCount'+$index+'.$dirty')">
+										<p ng-message="required">*发放数量不能为空</p>
+									</div>
+								</div>
+								<div flex="5"></div>
+								<div flex="25" class="price-min">
+									满
+									<div class="input-component">
+										<input type="text" ng-model="coupon.useExceedValue" only-digits name="useExceedValue{{$index}}" required>
+										<span>元</span>
+									</div>
+									可用
+									<div class="ng-msg" ng-messages="$eval('inputForm4.useExceedValue'+$index+'.$error')" ng-if="$eval('inputForm4.useExceedValue'+$index+'.$dirty')">
+										<p ng-message="required">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*金额不能为空</p>
+									</div>
+								</div>
+								<div flex="20" class="price-value">
+									<span ng-bind="coupon.ticketValue * coupon.ticketCount"></span>
+								</div>
+								<div flex class="remove-coupon" ng-if="$index > 0">
+									<i data-icon="&#xe61d;" ng-click="removeCoupon($index)"></i>
+								</div>
+							</div>
+							<div class="line add-item"  layout="row" layout-wrap>
+								<div flex="20" ng-click="addCoupon()">
+									<i data-icon="&#xe607;"></i>
+								</div>
+							</div>
+						</div>
+						<div class="line total">
+							总计&nbsp;&nbsp;&nbsp;&nbsp;
+							<span ng-if="modalCache.data.triggerType==2">
+								<div class="input-component">
+									<input type="text" ng-model="modalCache.data.shareCount" name="shareCount" required only-digits>
+									<span>人次</span>
+								</div>
+								&nbsp;&nbsp;可分享
+							</span>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{modalCache.helperObj.couponPriceCount}}&nbsp;&nbsp;个红包
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{modalCache.helperObj.couponPriceTotal}}&nbsp;&nbsp;
+							元面值
+							<div class="ng-msg" ng-messages="inputForm4.shareCount.$error" ng-if="inputForm4.shareCount.$dirty">
+								<p ng-message="required">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*可分享人次不能为空</p>
+							</div>
+						</div>
+					</div>
+					<!-- 兑换红包 -->
+					<div class="add-coupon-container type2" ng-if="modalCache.data.cType==2">
+						<div class="header" layout="row" layout-wrap>
+							<div flex="20">兑换门店</div>
+							<div flex="5"></div>
+							<div flex="45">兑换餐点</div>
+							<div flex="5"></div>
+							<!-- <div flex="15">兑换数量<span>/券</span></div>
+							<div flex="5"></div> -->
+							<div flex>价值</div>
+						</div>
+						<div class="coupon-list">
+							<div class="line" layout="row" layout-wrap ng-repeat="coupon in modalCache.data.couponFoodList">
+								<div flex="20" ng-bind="findElement(modalCache.renderObj.shopList,'shopId',coupon.shopId).shopName"></div>
+								<div flex="5"></div>
+								<div flex="45">
+									<div class="meals" ng-click="showMealPicker($index)">
+										<i data-icon="&#xe609;"></i>
+										<span ng-bind="coupon.foodName"></span>
+									</div>
+								</div>
+								<div flex="5"></div>
+								<!-- <div flex="15">
+									<div class="input-component">
+										<input type="text" ng-model="coupon.ticketCount">
+										<span>份</span>
+									</div>
+								</div>
+								<div flex="5"></div> -->
+								<div flex><span ng-bind="coupon.foodPrice"></span>元</div>
+							</div>
+						</div>
+						<div class="line total">
+							总计&nbsp;&nbsp;&nbsp;&nbsp;
+							<div class="input-component">
+								<input type="text" ng-model="modalCache.helperObj.couponDetailList2[0].ticketCount" name="ticketCount" required only-digits>
+								<span>个</span>
+							</div>
+							&nbsp;&nbsp;&nbsp;&nbsp;红包
+							<div class="ng-msg" ng-messages="inputForm4.ticketCount.$error" ng-if="inputForm4.ticketCount.$dirty">
+								<p ng-message="required">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*红包总数不能为空</p>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="submit-btn">
+		<md-button class="md-raised" ng-click="toNext()">下一步</md-button>
+		<!-- <md-button ng-show="modalCache.renderObj.stepIndex==2" class="md-raised" ng-click="save()">保存</md-button> -->
+	</div>
+</md-dialog>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<title>去嗨商家</title>
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<script data-main="js/main" src="lib/requirejs/require.js"></script>
+	<link rel="stylesheet" href="lib/angular-material/angular-material.min.css">
+	<link rel="stylesheet" href="lib/angular-loading-bar/build/loading-bar.css">
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/common.css">
+	<link rel="stylesheet" href="css/frame.css">
+	<link rel="stylesheet" href="css/setting.css">
+	<link rel="stylesheet" href="css/order.css">
+	<link rel="stylesheet" href="css/sell.css">
+	<link rel="stylesheet" href="css/mail.css">
+	<link rel="stylesheet" href="css/finance.css">
+</head>
+<body>
+	<div class="wrapper">
+		<!-- 头部 -->
+		<div data-header-view class="header"></div>
+		<div class="main">
+			<!-- 左侧导航菜单 -->
+			<div class="left-menu">
+				<div data-nav-menu role="navigation"></div>
+			</div>
+			<!-- 主体部分 -->
+			<div class="right-content">
+				<div data-ui-view class="container"></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

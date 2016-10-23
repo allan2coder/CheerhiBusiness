@@ -1,0 +1,280 @@
+<!-- 预订确认 -->
+<!-- 筛选菜单 -->
+<div class="toper-menu">
+    <md-radio-group ng-model="initState.code" ng-change="radioSwitch()">
+        <md-radio-button ng-repeat="stateInfo in manageStateArr" ng-value="stateInfo.code" class="md-primary">
+            {{stateInfo.dscp}} <span ng-bind=" '(' + stateInfo.sum + ')' "></span>
+        </md-radio-button>
+        <div class="clear"></div>
+    </md-radio-group>
+</div>
+<div class="order-wrapper">
+    <!-- 手动添加预约订单 -->
+    <div class="add-book-order">
+        <i data-icon="&#xe607;"></i> 手动添加预约订单
+    </div>
+    <!-- 订单列表 -->
+    <div class="order-list">
+        <ul>
+            <!-- 现场收款 -->
+            <li ng-repeat="orderInfo in orderList.orderList">
+                <div class="order-header">
+                    <p class="time" data-icon="&#xe60e;">
+                        {{orderInfo.startTime}}
+                    </p>
+                    <p class="order-num fr">
+                        <span>订单 {{orderInfo.orderNum}}</span>
+                        <button data-icon="&#xe60d;">餐点订单</button>
+                    </p>
+                </div>
+                <div class="order-body clearfix">
+                    <!-- 左1 -->
+                    <div class="order-info">
+                        <div class="user-info">
+                            <img src="img/avatar2.png" alt="">
+                            <div>
+                                <p>{{orderInfo.userPhone}}</p>
+                                <p class="name">{{orderInfo.userName}}</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <p>活动<span>{{orderInfo.activeName}}</span></p>
+                            <p ng-if="orderInfo.userMsg != ''">备注<span>{{orderInfo.userMsg}}</span></p>
+                        </div>
+                    </div>
+                    <div class="type-btn fr">
+                        <!-- 现场付款 -->
+                        <!-- 5、现场未付款 6、现场已付款 -->
+                        <!-- <div class="pay-way1" ng-if="orderInfo.cashState == 5 || orderInfo.cashState == 6">
+							<button ng-if="!orderInfo.edit" ng-click="typeSwitch($index)">{{boxTheme.styleName?boxTheme.styleName:'现场收款'}}</button>
+							<input ng-if="orderInfo.edit"  type="text" class="type-code-input type-code" placeholder="输入金额" focus-me="orderInfo.edit" ng-blur="submitPrice(orderInfo.cash)" ng-model="orderInfo.cash">
+						</div> -->
+                        <!-- 接口未给，仅显示效果 -->
+                        <div class="pay-way1" ng-if="orderInfo.cashState == 5 || orderInfo.cashState == 6">
+                            <button class="live-pay">现场收款</button>
+                            <!-- <input type="text" class="type-code-input type-code" placeholder="输入金额"> -->
+                        </div>
+                        <!-- 线上付款 -->
+                        <div class="pay-way2" ng-if="orderInfo.cashState != 5 && orderInfo.cashState != 6">
+                            <button class="type-code" ng-if="orderInfo.codeStatus == underfined" ng-click="typeSwitch($index)">输入消费码</button>
+                            <input type="text" class="type-code-input type-code" placeholder="输入消费码" focus-me="orderInfo.codeStatus == 0" ng-blur="submitPrice($index,$event)" ng-if="orderInfo.codeStatus == 0 || orderInfo.codeStatus == 2" ng-class="{typeFalse: orderInfo.codeStatus == 2}">
+                            <div class="type-code ok-code" ng-if="orderInfo.codeStatus == 1">{{consumeCode}}</div>
+                        </div>
+                        <!-- 包厢号 -->
+                        <md-button class="md-primary md-raised" ng-click="showTabDialog($index, $event, orderInfo.tableTypeCode)">
+                            {{orderInfo.tableTypeName}}
+                            <span class="box-style">中国风</span>
+                        </md-button>
+                    </div>
+                    <!-- 价格 -->
+                    <div class="price fr">
+                        <p><em class="total">总计</em><span>{{orderInfo.price}}</span><em class="yuan">元</em></p>
+                        <p class="actual-pay" ng-if="orderInfo.userCouponId != 0"><em class="total">实付</em><span>{{orderInfo.payCash}}</span><em class="yuan">元</em></p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+	<!-- 弹窗 -->
+	<script type="text/ng-template" id="tabDialog.tmpl.html">
+	    <md-dialog aria-label="Mango (Fruit)" style="padding: 20px;" class="order-dialog-wrapper">
+	        <form>
+	            <md-toolbar>
+	                <div class="md-toolbar-tools" style="background-color: rgb(255,255,255)!important;">
+	                    <h2>指定包厢</h2>
+	                    <span flex></span>
+	                    <md-button class="md-icon-button" ng-click="cancel()">
+	                        <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+	                    </md-button>
+	                </div>
+	            </md-toolbar>
+	            <md-dialog-content style="max-width:800px;max-height:810px;">
+	                <md-tabs md-dynamic-height md-border-bottom>
+	                    <md-tab label="大包">
+	                        <md-content class="md-padding" style="padding: 0!important;">
+	                            <div class="md-box-list clearfix">
+	                            	<ul>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            	</ul>
+	                            </div>
+	                        </md-content>
+	                    </md-tab>
+	                    <md-tab label="迷你包">
+	                        <md-content class="md-padding" style="padding: 0!important;">
+	                            <div class="md-box-list clearfix">
+	                            	<ul>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            	</ul>
+	                            </div>
+	                        </md-content>
+	                    </md-tab>
+	                    <md-tab label="超大包">
+	                        <md-content class="md-padding" style="padding: 0!important;">
+	                            <div class="md-box-list clearfix">
+	                            	<ul>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            	</ul>
+	                            </div>
+	                        </md-content>
+	                    </md-tab>
+	                    <md-tab label="中包">
+	                        <md-content class="md-padding" style="padding: 0!important;">
+	                            <div class="md-box-list clearfix">
+	                            	<ul>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            		<li>
+	                            			<button>A1111 <p>公主风</p></button>
+	                            		</li>
+	                            	</ul>
+	                            </div>
+	                        </md-content>
+	                    </md-tab>
+	                </md-tabs>
+	            </md-dialog-content>
+	            <md-dialog-actions layout="row">
+	                <md-button class="dialog-btn" ng-click="answer('useful')" style="margin-right:20px;">
+	                    确定
+	                </md-button>
+	            </md-dialog-actions>
+	        </form>
+	    </md-dialog>
+	</script>
+</div>
+

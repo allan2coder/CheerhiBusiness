@@ -1,0 +1,31 @@
+<div class="member-setting-component">
+	<div class="shops">
+		<md-radio-group ng-model="statuStore.currShopIndex" class="md-primary">
+			<md-radio-button ng-repeat="shop in shopList" ng-value="$index">
+			{{shop.shopName}}
+			</md-radio-button>
+			<div class="clear"></div>
+		</md-radio-group>
+	</div>
+	<div class="member-list">
+		<ul class="clearfix" ng-if="statuStore.finish">
+			<li class="add-item" ng-click="showAdd()">
+				<div data-icon="&#xe607;"><span>新增成员</span></div>
+			</li>
+			<li ng-repeat="member in shopList[statuStore.currShopIndex].memberList" ng-class="{disable:member.state===1}">
+				<div class="member-header {{'role-' + member.sgId}}" ng-bind="member.sgName" data-icon="&#xe608;"></div>
+				<div class="member-content">
+					<img src="./img/icon.png" alt=""><br>
+					<span ng-bind="member.name"></span>
+				</div>
+				<div class="overlay">
+					<div class="handle-edit">
+						<md-button class="md-raised" ng-click="showUpdate($index)">编辑</md-button>
+					</div>
+                    <div class="handle-delete" data-icon="&#xe606;" ng-click="deleteMember($event, member.sellerId)"></div>
+				</div>
+			</li>
+		</ul>
+		<md-progress-circular md-mode="indeterminate" md-diameter="80" ng-if="!statuStore.finish"></md-progress-circular>
+	</div>
+</div>

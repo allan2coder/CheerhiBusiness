@@ -1,0 +1,55 @@
+<div class="couponManage-component">
+	<div class="coupon-type">
+		<md-radio-group ng-model="statuStore.couponStatusIndex">
+			<md-radio-button ng-value="1" class="md-primary">启用</md-radio-button>
+			<md-radio-button ng-value="2" class="md-primary">未启用</md-radio-button>
+			<md-radio-button ng-value="3" class="md-primary">兑换中</md-radio-button>
+			<md-radio-button ng-value="4" class="md-primary">已失效</md-radio-button>
+			<div class="clear"></div>
+		</md-radio-group>
+	</div>
+	<div class="coupon-content">
+		<ul class="clearfix">
+			<li class="add-item" ng-click="showAdd(null)">
+				<div data-icon="&#xe607;"><span>新增红包</span></div>
+			</li>
+			<li ng-repeat="coupon in couponList">
+				<div class="trigger-type clearfix">
+					<div class="ico">
+						<i data-icon="&#xe61b;" ng-if="coupon.triggerType==1"></i>
+						<i data-icon="&#xe618;" ng-if="coupon.triggerType==2"></i>
+						<i data-icon="&#xe619;" ng-if="coupon.triggerType==3"></i>
+						<i data-icon="&#xe61a;" ng-if="coupon.triggerType==4"></i>
+					</div>
+					<div class="typename" ng-bind="findElement(statuStore.constants.triggerType,'code',coupon.triggerType).name+'红包'"></div>
+				</div>
+				<div class="title clearfix" ng-click="couponDetail($index)">
+					<div class="ico">
+						<i data-icon="&#xe616;" ng-if="coupon.cType==1"></i>
+						<i data-icon="&#xe617;" ng-if="coupon.cType==2"></i>
+					</div>
+					<div class="couponname" ng-bind="coupon.cName"></div>
+				</div>
+				<div class="times">
+					<div class="count send">领取/发放&nbsp;&nbsp;{{couponDetailList[$index].getCount}}/{{couponDetailList[$index].sendCount}}</div>
+					<div class="time-part">
+						{{replaceAll(coupon.sendTimeStart.split(' ')[0],'-','.')}}&nbsp;-&nbsp;{{replaceAll(coupon.sendTimeEnd.split(' ')[0],'-','.')}}
+					</div>
+					<div class="count use">使用/领取&nbsp;&nbsp;{{couponDetailList[$index].useCount}}/{{couponDetailList[$index].getCount}}</div>
+					<div class="time-part">
+						{{replaceAll(coupon.useTimeStart.split(' ')[0],'-','.')}}&nbsp;-&nbsp;{{replaceAll(coupon.useTimeEnd.split(' ')[0],'-','.')}}
+					</div>
+				</div>
+				<div class="button" ng-if="[1,2,4].indexOf(statuStore.couponStatusIndex) + 1">
+					<md-button class="md-raised btn-disable" ng-if="coupon.state==1" ng-click="switchEnable(coupon,$event)">停用</md-button>
+					<md-button class="md-raised btn-enable" ng-if="coupon.state==2" ng-click="switchEnable(coupon,$event)">启用</md-button>
+					<div class="status" ng-if="coupon.state==3">兑换中</div>
+					<div class="status" ng-if="coupon.state==4">已失效</div>
+				</div>
+				<div class="button" ng-if="statuStore.couponStatusIndex==3">
+					<div class="status">兑换中</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>

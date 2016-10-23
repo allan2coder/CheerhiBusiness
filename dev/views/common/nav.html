@@ -1,0 +1,7 @@
+<ul>
+	<li ng-if="pageAuth[0].enable" name="order" ng-class="isTabActive('order')"><md-button ng-click="switchRootMenu('order')"><i class="iconfont">&#xe601;</i>订单管理</md-button></li>
+	<li ng-if="pageAuth[1].enable" name="sell" ng-class="isTabActive('sell')"><md-button ng-click="switchRootMenu('sell')"><i class="iconfont">&#xe605;</i>营销管理</md-button></li>
+	<li ng-if="pageAuth[2].enable" name="finance" ng-class="isTabActive('finance')"><md-button ng-click="switchRootMenu('finance')"><i class="iconfont">&#xe602;</i>财务管理</md-button></li>
+	<li ng-if="pageAuth[3].enable" name="report" ng-class="isTabActive('report')"><md-button ng-click="switchRootMenu('report')"><i class="iconfont">&#xe604;</i>营运报表</md-button></li>
+	<li ng-if="pageAuth[4].enable" name="setting" ng-class="isTabActive('setting')"><md-button ng-click="switchRootMenu('setting')"><i class="iconfont">&#xe603;</i>经营设置</md-button></li>
+</ul>

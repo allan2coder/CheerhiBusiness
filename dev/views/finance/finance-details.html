@@ -1,0 +1,60 @@
+<!-- 时间选择器 -->
+<div class="time-picker datepickerdemoBasicUsage">
+	<md-content>
+	    <md-datepicker ng-model="myDate" ng-change="dateChange()" md-placeholder="Enter date"></md-datepicker>
+	</md-content>
+</div>
+<div class="finance-details finance-check">
+    <div class="finance-subnav">
+        <ul>
+            <li ng-class="{active:menu.code == initState.code}" ng-repeat="menu in financeStateArr" ng-click="switchStatus(menu.code)">
+                <p>{{menu.dscp}} <i class="info-icon" ng-mouseenter="isfold = 1" ng-mouseleave="isfold = 0"></i></p>
+                <h2><span>{{menu.cash}} <b>元</b></span> {{menu.count?menu.count + "笔":""}}</h2>
+                <div class="fold"  ng-if="isfold">
+                    <div id="triangle-up">
+                        <div id="triangle-up2">
+                        </div>
+                    </div>
+                    <p>{{menu.info}}</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="finance-list">
+        <table ng-if="orderList.length != 0">
+            <tr>
+                <th width="95" data-icon="&#xe60e;" class="clock"></th>
+                <th width="130">订单号</th>
+                <th width="96">订单金额</th>
+                <th width="80">在线付</th>
+
+                <th width="74">现场付</th>
+                <th width="74">减免</th>
+                <th width="60">退款</th>
+                <th width="96">操作员</th>
+
+                <th width="112" class="calc">小计 <span>元</span></th>
+            </tr>
+            <tr ng-repeat="list in orderList">
+                <td width="95">{{list.orderTime}}</td>
+                <td width="130">{{list.orderNum}}</td>
+                <td width="96">{{list.cashValue}}</td>
+                <td width="80">{{list.payCash?list.payCash:"-"}}</td>
+
+                <td width="74">{{list.localPayCash?list.localPayCash:"-"}}</td>
+                <td width="74">{{list.couponValue?list.couponValue:"-"}}</td>
+                <td width="60">{{list.refundCash?list.refundCash:"-"}}</td>
+                <td width="96">{{list.recordName?list.recordName:"-"}}</td>
+
+                <td width="112">{{list.totalLeft?list.totalLeft:'-'}}</td>
+            </tr>
+        </table>
+        <!-- 空白页 -->
+        <div class="nodate" style="text-align: center;background-color: #fff;padding-bottom: 20%;" ng-if="orderList.length === 0">
+            <img src="img/weichuzhang.png" alt="">
+            <h1>还没有相关的订单</h1>
+            <p>这里可以先不管</p>
+        </div>
+
+    </div>
+</div>

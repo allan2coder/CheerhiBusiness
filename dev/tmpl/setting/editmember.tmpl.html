@@ -1,0 +1,69 @@
+<md-dialog class="editmember">
+	<div class="title" ng-bind="modalCache.static.title"></div>
+	<div class="fields">
+		<form name="inputForm">
+			<div class="line" layout="row" layout-wrap>
+				<div flex="15">账号</div>
+				<div flex>
+					<input type="text" placeholder="在此处输入手机号码" ng-model="modalCache.data.phoneNum" name="phoneNum" required only-digits maxlength="11" pattern="[1][34578][0-9]{9}">
+					<div class="ng-msg" ng-messages="inputForm.phoneNum.$error">
+						<p ng-message="required" ng-if="inputForm.phoneNum.$dirty">*账号不能为空</p>
+						<p ng-message="pattern" ng-if="inputForm.phoneNum.$dirty">*请输入正确的手机号</p>
+					</div>
+				</div>
+			</div>
+			<div class="line" layout="row" layout-wrap>
+				<div flex="15">姓名</div>
+				<div flex>
+					<input type="text" ng-model="modalCache.data.name" name="name" required maxlength="10">
+					<div class="ng-msg" ng-messages="inputForm.name.$error">
+						<p ng-message="required" ng-if="inputForm.name.$dirty">*姓名不能为空</p>
+					</div>
+				</div>
+			</div>
+			<div class="line" layout="row" layout-wrap ng-if="isCreate">
+				<div flex="15">密码</div>
+				<div flex>
+					<input type="password" ng-model="modalCache.data.password" name="password" required minlength="6" maxlength="20" autocomplete="new-password">
+					<div class="ng-msg" ng-messages="inputForm.password.$error" ng-if="inputForm.password.$dirty">
+						<p ng-message="required">*密码不能为空</p>
+						<p ng-message="minlength">*密码不能少于6位</p>
+					</div>
+				</div>
+			</div>
+			<div class="line" layout="row" layout-wrap>
+				<div flex="15">等级</div>
+				<div flex>
+					<md-radio-group ng-model="modalCache.data.sgId" class="md-primary">
+						<md-radio-button ng-repeat="role in roleList" ng-value="role.sgId">
+							{{role.sgName}}
+						</md-radio-button>
+						<div class="clear"></div>
+					</md-radio-group>
+				</div>
+			</div>
+			<div class="line" layout="row" layout-wrap>
+				<div flex="15">门店</div>
+				<div flex>
+					<md-checkbox class="md-primary" ng-repeat="shop in shopList" ng-true-value="1" ng-false-value="0" ng-model="shop.checked">
+						{{shop.shopName}}
+					</md-checkbox>
+				</div>
+			</div>
+			<div class="line" layout="row" layout-wrap>
+				<div flex="15">状态</div>
+				<div flex>
+					<md-switch ng-model="modalCache.data.state" ng-true-value="0" ng-false-value="1" class="md-block md-primary">{{modalCache.data.state?'已禁用':'已启用'}}
+					</md-switch>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="submit-btn">
+		<!-- <md-button class="md-raised del" ng-click="deleteMember()">删除该用户</md-button> -->
+		<md-button class="md-raised save" ng-click="saveMember()">保存</md-button>
+	</div>
+	<!-- <div class="dialog-overlay">
+		<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+	</div> -->
+</md-dialog>

@@ -1,0 +1,27 @@
+<md-dialog class="submealpicker">
+	<div class="title" ng-bind="title"></div>
+	<div class="fields">
+		<div class="nav-header">
+			<md-radio-group ng-model="mealCateIndex" class="md-primary">
+				<md-radio-button ng-repeat="mealCate in mealCateList" ng-value="mealCate.cateIndex">
+					{{mealCate.cate}}
+				</md-radio-button>
+				<div class="clear"></div>
+			</md-radio-group>
+		</div>
+		<div class="sub-meal-list">
+			<ul class="clearfix">
+				<li ng-repeat="meal in mealCateList[mealCateIndex-1].mealList" ng-click="selectSubMeal(meal)">
+					<div class="up">
+						<img ng-src="{{meal.fImg==''?'./img/blank.png':meal.fImg}}" alt="">
+					</div>
+					<div class="down">
+						<span ng-bind="meal.fName"></span>
+						<span ng-bind="'￥&nbsp;' + meal.fpPrice"></span>
+					</div>
+					<div class="overlay"></div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</md-dialog>

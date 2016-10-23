@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+	<link rel="stylesheet" href="../css/printOrder.css">
+	<title>打印预览</title>
+
+	<script type="text/javascript" src="../lib/angular/angular.min.js"></script>
+	<script>
+		var server_host = '';
+		// var server_host = 'http://cheerhi.6655.la';
+		// var server_host = 'http://139.162.17.89';
+
+		//获取地址栏参数
+		function getParameterByName(name) {
+		    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+		        results = regex.exec(location.search);
+		    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
+		var shopId = getParameterByName('shopId');
+		var orderNum = getParameterByName('orderNum');
+		// var urlTableDetail = server_host + '/custweb/sellerCenter/order/orderTableDetail.do';
+		// var urlMealDetail = server_host + '/custweb/food/getOrderFoodInfo.do';
+		var urlOrderDetail = '/detail/orderDetail.do';
+		var appModule = angular.module('Print', []);
+		//根据属性值从json数组中检索对象
+		function findElement(arr, propName, propValue) {
+		    for (var i = 0; i < arr.length; i++)
+		        if (arr[i][propName] == propValue)
+		            return arr[i];
+		}
+
+	</script>
+
+
+	<script>
+		appModule.controller('PrintCtrl', ['$scope', '$http', function($scope, $http) {
+			$scope.findElement = findElement;
+			$scope.isMeal = !(orderNum.indexOf('K') == 0);
+
+			//订单生成终端
+			$scope.terminal = [{
+				code: 1,
+				dscp: '客户端'
+			}, {
+				code: 2,
+				dscp: '商户端'
+			}];
+
+			$http.get(urlOrderDetail + '?orderNum=' + orderNum)
+				.success(function(data, status, headers, config) {
+					console.log(data);
+					$scope.orderInfo = data;
+				});
+		}]);
+	</script>
+</head>
+<body ng-app="Print" ng-controller="PrintCtrl">
+	<!-- 餐点 -->
+	<div class="order-meal-detail" ng-if="isMeal">
+		<div class="order-title">
+			<div class="title">餐点订单详情</div>
+			<div class="date" ng-bind="orderInfo.orderDate"></div>
+			<div class="orderinfo">
+				订单号码：{{orderInfo.orderNum}}
+				<br>消费时间：{{orderInfo.createTime}}
+				<br>包厢规格：{{orderInfo.tableName!=''?orderInfo.tableName:'未指定'}}&nbsp;{{orderInfo.themeName}}
+				<br><span ng-if="orderInfo.ktvOrderNum != ''">关联订单号：{{orderInfo.ktvOrderNum}}</span>
+			</div>
+		</div>
+		<div class="split-line">****************************************************************************************</div>
+		<div class="userinfo">
+			{{orderInfo.userName}}<br><span>{{orderInfo.uTell}}</span>
+		</div>
+		<div class="split-line">****************************************************************************************</div>
+		<div class="mealinfo">
+			<div class="mealinfo-title  p-title">
+				餐点信息
+			</div>
+			<div class="p-content">
+				<div class="ordernum">
+					订单号码：{{orderInfo.orderNum}}
+				</div>
+				<div class="mealdetail clearfix">
+					<div>餐点详情：</div>
+					<div>
+						<span ng-repeat="food in orderInfo.foodMealList">{{food.foodName + '*' + food.foodNumber + food.unitType}}<br></span>
+					</div>
+				</div>
+				<div class="ordersum">
+					订单合计：¥{{orderInfo.cashValue}}
+					<span ng-if="orderInfo.couponValue != 0">红包减免 ¥ {{orderInfo.couponValue}}</span>
+				</div>
+				<div class="coupondiscount" ng-if="parseFloat(orderInfo.couponValue)>0">
+					红包减免：-${{orderInfo.couponValue}}<span>抵</span>
+				</div>
+				<div class="payvalue">
+					已付款：¥{{orderInfo.payCash}}
+				</div>
+			</div>
+		</div>
+		<div class="split-line">****************************************************************************************</div>
+		<div class="remark">
+			<div class="remark-title  p-title">
+				备注留言
+			</div>
+			<div class="p-content">
+				<div class="remark-content" ng-bind="orderInfo.message"></div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 预定订单 -->
+	<div class="order-detail" ng-if="!isMeal">
+		<div class="order-title">
+			<div class="title">预订订单</div>
+			<div class="date" ng-bind="orderInfo.date"></div>
+			<div class="orderinfo">
+				订单号码：{{orderInfo.orderNum}}
+			</div>
+		</div>
+		<div class="split-line">****************************************************************************************</div>
+		<div class="userinfo">
+			{{orderInfo.userName}}&nbsp;<span>{{findElement(terminal,'code',orderInfo.siteType).dscp}}预订</span><br><span>{{orderInfo.userPhone}}</span>
+		</div>
+		<div class="split-line">****************************************************************************************</div>
+		<div class="time">
+			<div class="expense-time p-title">
+				消费时间
+			</div>
+			<div class="p-content">
+				<div class="iotime clearfix">
+					<div class="intime">
+						<span>&nbsp;入场</span><br>{{orderInfo.startTime}}
+					</div>
+					<div class="outtime">
+						<span>离场&nbsp;</span><br>{{orderInfo.endTime}}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="split-line">****************************************************************************************</div>
+		<div class="orderinfo">
+			<div class="p-title">
+				预订信息
+			</div>
+			<div class="p-content">
+<!-- 				<div class="ordernum">
+					订单号码：{{orderInfo.orderNum}}
+				</div> -->
+				<div class="timepart clearfix">
+					<div>唱段详情：</div>
+					<div>{{orderInfo.activeName}}</div>
+				</div>
+				<div>包厢规格：{{orderInfo.tableName!=''?orderInfo.tableName:'未指定'}}&nbsp;{{orderInfo.themeName}}</div>
+				<div>统计合计：¥{{orderInfo.cashValue}} <span ng-if="orderInfo.couponValue != 0">红包减免 ¥ {{orderInfo.couponValue}}</span></div>
+				<div class="coupondiscount" ng-if="parseFloat(orderInfo.couponValue)>0">
+					红包减免：-¥{{orderInfo.couponValue}}<span>抵</span>
+				</div>
+				<!-- 线上预订&线上付款&已付款 -->
+				<div class="payvalue" ng-if="orderInfo.siteType==1&&orderInfo.cashState==2">
+					已付款：¥{{orderInfo.payCash}}
+				</div>
+				<!-- 线上预订&线上付款&待付款 -->
+				<div class="payvalue" ng-if="orderInfo.siteType==1&&orderInfo.cashState==1">
+					待付款：¥{{orderInfo.payCash}}
+				</div>
+				<!-- 线上预订&现场付款&已现场付 -->
+				<div class="payvalue" ng-if="orderInfo.siteType==1&&orderInfo.cashState==6">
+					已现场付：¥{{orderInfo.payCash}}
+				</div>
+				<!-- 线上预订&现场付款&待现场付 -->
+				<div class="payvalue" ng-if="orderInfo.siteType==1&&orderInfo.cashState==5">
+					待现场付：¥{{orderInfo.cashValue}}
+				</div>
+				<!-- 手动预约&已现场付 -->
+				<div class="payvalue" ng-if="orderInfo.siteType==2&&orderInfo.cashState==6">
+					已现场付：¥{{orderInfo.payCash}}
+				</div>
+				<!-- 手动预约&待现场付 -->
+				<div class="payvalue" ng-if="orderInfo.siteType==2&&orderInfo.cashState==5">
+					待现场付：¥{{orderInfo.payCash}}
+				</div>
+
+				<div class="order-mealinfo">
+					套餐详情：{{orderInfo.orderFood==''?'暂无套餐详情。':orderInfo.orderFood}}
+				</div>
+			</div>
+		</div>
+		<div class="split-line">****************************************************************************************</div>
+		<div class="remark">
+			<div class="remark-title  p-title">
+				备注留言
+			</div>
+			<div class="p-content">
+				<div class="remark-content">
+					{{orderInfo.userMsg}}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="print-btn">
+		<button onclick="window.print()">打印</button>
+	</div>
+</body>
+</html>

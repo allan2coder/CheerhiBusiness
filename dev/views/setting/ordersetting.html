@@ -1,0 +1,27 @@
+<div class="order-setting-component">
+	<div class="title">可预约数量设置</div>
+	<div class="table">
+		<table cellspacing="0">
+			<tr>
+				<th>包厢类型</th>
+				<th>周一</th>
+				<th>周二</th>
+				<th>周三</th>
+				<th>周四</th>
+				<th>周五</th>
+				<th>周六</th>
+				<th>周日</th>
+			</tr>
+			<tr ng-repeat="boxType in boxTypeList">
+				<td ng-bind="boxType.tableTypeName"></td>
+				<td ng-repeat="day in weekdays">
+					<div ng-if="$parent.$index !== statuStore.editingItem.typeIndex || $index !== statuStore.editingItem.weekdayIndex" ng-bind="boxType['markCount' + $index] > 0 ? boxType['markCount' + $index] : '-'" ng-click="toggleUpdateRemain($parent.$parent.$index,$index)"></div>
+					<input ng-if="$parent.$index === statuStore.editingItem.typeIndex && $index === statuStore.editingItem.weekdayIndex" ng-blur="saveUpdate($parent.$parent.$index,$index,$event)" focus-me="focus" type="text" ng-model="remainCountObj.count" maxlength="2" only-digits>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="dscp">
+		*可在此处添加每个规则的包厢每周的可预约数量，设置后线上将释放相应数量的包厢。
+	</div>
+</div>

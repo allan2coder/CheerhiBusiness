@@ -1,0 +1,43 @@
+<div class="meal-setting-component">
+	<div class="meal-cate">
+		<md-radio-group ng-model="statuStore.mealCateIndex">
+			<md-radio-button class="md-primary" ng-repeat="mealCate in mealCateList" ng-value="mealCate.cateIndex">
+			{{mealCate.cate}}
+			</md-radio-button>
+			<div class="clear"></div>
+		</md-radio-group>
+	</div>
+	<div class="meal-list">
+		<ul class="clearfix">
+			<li class="add-meal" ng-class="{'single-meal':statuStore.mealCateIndex>0}" ng-click="showAdd()">
+				<div data-icon="&#xe607;"><span>新增{{statuStore.mealCateIndex==0?'套餐':'餐点'}}</span></div>
+			</li>
+			<li ng-repeat="meal in mealCateList[statuStore.mealCateIndex].mealList" class="meal-item" ng-class="{'single-meal':statuStore.mealCateIndex>0}">
+				<div class="up">
+					<img ng-src="{{meal.fImg==''?'./img/blank.png':meal.fImg}}" alt="">
+				</div>
+				<div class="down">
+					<div class="title clearfix">
+						<span ng-bind="meal.fName" title="{{meal.fName}}"></span>
+						<span ng-bind="'￥&nbsp;&nbsp;' + meal.fpPrice"></span>
+					</div>
+					<div class="detail" ng-if="statuStore.mealCateIndex==0">
+						<div ng-repeat="submeal in meal.foodMealList" ng-if="$index < 3" class="clearfix">
+							<span ng-bind="submeal.singleName"></span>
+							<span ng-bind="'×&nbsp;&nbsp;' + submeal.tmNumber"></span>
+						</div>
+						<span ng-if="meal.foodMealList.length>3" class="more" ng-mouseover="showMoreSubMeal($event,meal.foodMealList)">·&nbsp;·&nbsp;·</span>
+					</div>
+					<div class="bottom">
+						<span ng-bind="'销量&nbsp;&nbsp;&nbsp;' + meal.foodSellCount"></span>
+						<md-button class="md-raised" ng-class="{sell:meal.isSell}" ng-bind="meal.isSell?'已上架':'上架'" ng-click="switchSell($event,meal.isSell,meal.fId)"></md-button>
+					</div>
+				</div>
+				<div class="overlay">
+					<div class="handle-edit" ng-click="showUpdate(meal)">编辑</div>
+                    <div class="handle-delete" data-icon="&#xe606;" ng-click="deleteItem($event,meal.fId,meal.cateId)"></div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>

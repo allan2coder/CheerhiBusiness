@@ -1,0 +1,37 @@
+<md-dialog class="editboxnumber">
+	<div class="title" ng-bind="'包厢号码管理('+modalCache.renderObj.typeName+')'">
+	</div>
+	<div class="fields">
+		<div class="t-th" layout="row" layout-wrap>
+			<div flex="40">包厢号码</div>
+			<div flex="60">包厢主题</div>
+		</div>
+		<div class="t-body">
+			<form name="inputForm">
+				<div class="t-tr" layout="row" layout-wrap>
+					<div flex="40">
+						<input type="text" ng-model="modalCache.data.tName" name="tName" required maxlength="8">
+						<div class="ng-msg" ng-messages="inputForm.tName.$error">
+							<p ng-message="required" ng-if="inputForm.tName.$dirty">*房间号码不能为空</p>
+						</div>
+					</div>
+					<div flex="60">
+						<md-select ng-model="modalCache.data.styleId">
+							<md-option ng-repeat="boxTheme in boxThemeList" value="{{boxTheme.id}}">
+							{{boxTheme.styleName}}
+							</md-option>
+						</md-select>
+					</div>
+				</div>
+			</form>
+			<!-- <div class="t-tr">
+				<div class="add-item">
+					<i data-icon="&#xe607;"></i>
+				</div>
+			</div> -->
+		</div>
+	</div>
+	<div class="submit-btn">
+		<md-button class="md-raised" ng-click="doSave()">保存</md-button>
+	</div>
+</md-dialog>

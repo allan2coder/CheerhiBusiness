@@ -1,0 +1,353 @@
+<!-- 筛选菜单 -->
+<div class="toper-menu" ng-if="$parent.flag == false">
+    <md-radio-group ng-model="initState.code" ng-change="radioSwitch(initState.code)">
+        <md-radio-button ng-repeat="stateInfo in manageStateArr" ng-value="stateInfo.code" class="md-primary">
+            {{stateInfo.dscp}} <span ng-bind=" '(' + stateInfo.sum + ')' "></span>
+        </md-radio-button>
+        <div class="clear"></div>
+    </md-radio-group>
+</div>
+<div class="refund-wrapper">
+    <!-- 待处理退单 -->
+    <div class="food-list" ng-if="initState.code == 1 && $parent.flag == false">
+        <ul>
+            <li ng-repeat="foodInfo in List.orderFoodRetreatlist">
+                <div class="food-header">
+                    <p class="time" data-icon="&#xe60e;">
+                        {{foodInfo.cjTime}}
+                    </p>
+                    <a class="print fr" target="_blank" href="page/printOrder.html?shopId={{userInfo.shopId}}&orderNum={{foodInfo.orderNum}}" data-icon="&#xe622;">打印</a>
+                </div>
+                <div class="food-body clearfix">
+                    <div class="order-info">
+                        <div class="food-item">
+
+                            <p class="order-num">
+                                订单
+                                <span class="hoverLnk" ng-mouseenter="hover = true" ng-mouseleave="hover = false">{{foodInfo.orderNum}}</span>
+                                <button data-icon="&#xe60d;" ng-click="showTabDialog($event, foodInfo)">预订订单</button>
+                            </p>
+                            <p class="food">餐点</p>
+                            <ul>
+                                <li ng-repeat="foodItem in foodInfo.foodMealList"><span class="food-name">{{foodItem.foodName}}</span><em>x</em> <span>{{foodItem.foodNumber}}</span></li>
+                                <!-- <li>{{foodInfo.activeName}}</li> -->
+                            </ul>
+                            <p class="attention">备注<span>{{foodInfo.message?foodInfo.message:"无"}}</span></p>
+
+
+                            <!-- 订单hover -->
+                            <div class="hoverOrder-wrapper" ng-class="{hoverActive: hover}">
+                                <div class="hover-content clearfix">
+                                    <img ng-if="foodInfo.uImg == ''" src="img/avatar2.png" alt="" />
+                                    <img ng-if="foodInfo.uImg != ''" ng-src="foodInfo.uImg" alt="" />
+                                    <p><span>{{foodInfo.uTell}}</span><span class="fr"><em>总计</em>{{foodInfo.cashValue}} <em>元</em></span></p>
+                                    <p class="">{{foodInfo.userName}} <span class="fr">实付 <em class="price">{{foodInfo.cashValue - foodInfo.couponValue}}</em> 元</span></p>
+                                </div>
+                                <span class="triangle-up"></span>
+                                <span class="triangle-up2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 按钮 -->
+                    <div class="relevance-box fr">
+                        <div class="box-num">
+                            {{foodInfo.tableTypeName}}
+                            <p>{{foodInfo.tableName?foodInfo.tableName:'未指定'}}</p>
+                        </div>
+                        <button class="fr refund-btn" ng-click="refundTabDialog($event, foodInfo.payCash, foodInfo.orderNum, foodInfo.tradeNo)">退款</button>
+                        <button class="fr" ng-click="refuseRefundTabDialog($event, foodInfo.orderNum)">拒绝退款</button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- 退餐 -->
+    <div class="food-list" ng-if="initState.code == 2 && $parent.flag == false">
+        <ul>
+            <li ng-repeat="foodInfo in List.orderFoodRetreatlist">
+                <div class="food-header">
+                    <p class="time" data-icon="&#xe60e;">
+                        {{foodInfo.cjTime}}
+                    </p>
+                    <a class="print fr" target="_blank" href="page/printOrder.html?shopId={{userInfo.shopId}}&orderNum={{foodInfo.orderNum}}" data-icon="&#xe622;">打印</a>
+                </div>
+                <div class="food-body clearfix">
+                    <div class="order-info">
+                        <div class="food-item">
+
+                            <p class="order-num">
+                            订单
+                                <span class="hoverLnk" ng-mouseenter="hover = true" ng-mouseleave="hover = false">{{foodInfo.orderNum}}</span>
+                                <button data-icon="&#xe60d;" ng-click="showTabDialog($event, foodInfo)">预订订单</button>
+                            </p>
+                            <p>餐点</p>
+                            <ul>
+                                <li ng-repeat="foodList in foodInfo.foodMealList"><span class="food-name">{{foodList.foodName}}</span><em>x</em> <span>{{foodList.foodNumber}}</span></li>
+                            </ul>
+                            <p class="attention">备注<span>{{foodInfo.message?foodInfo.message:"无"}}</span></p>
+
+                            <!-- 订单hover -->
+                            <div class="hoverOrder-wrapper" ng-class="{hoverActive: hover}">
+                                <div class="hover-content clearfix">
+                                    <img src="img/avatar2.png" alt="" />
+                                    <p><span>{{foodInfo.uTell}}</span><span class="fr"><em>总计</em>{{foodInfo.cashValue}} <em>元</em></span></p>
+                                    <p class="">{{foodInfo.userName}} <span class="fr">实付 <em class="price">{{foodInfo.payCash}}</em> 元</span></p>
+                                </div>
+                                <span class="triangle-up"></span>
+                                <span class="triangle-up2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 按钮 -->
+                    <div class="relevance-box fr">
+                        <div class="box-num">
+                            {{foodInfo.tableTypeName}}
+                            <p>{{foodInfo.tableName?foodInfo.tableName:'未指定'}}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- 订单退订 -->
+    <div class="refund-list" ng-if="initState.code == 3 && $parent.flag == false">
+        <ul>
+            <!-- 退订 -->
+            <li ng-repeat="orderInfo in List.dateCountList">
+                <div class="order-header">
+                    <p class="time" data-icon="&#xe60e;">{{orderInfo.startTime}}</p>
+                    <a class="print fr" target="_blank" href="page/printOrder.html?shopId={{userInfo.shopId}}&orderNum={{orderInfo.orderNum}}" data-icon="&#xe622;">打印</a>
+                </div>
+                <div class="order-body clearfix">
+                    <!-- 左1 -->
+                    <div class="order-info">
+                        <div class="user-info">
+                            <img ng-if="orderInfo.userImg != ''" src="" ng-src="{{orderInfo.userImg}}" alt="" />
+                            <img ng-if="orderInfo.userImg == ''" src="img/avatar2.png" alt="" />
+                            <div>
+                                <p>{{orderInfo.phoneNum}}</p>
+                                <p>{{orderInfo.userName?orderInfo.userName:'未指定'}}</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+
+                            <p class="order-num">
+                                订单
+                                <span class="hoverLnk" ng-mouseenter="hover = true" ng-mouseleave="hover = false">{{orderInfo.orderNum}}</span>
+                                <!-- <button data-icon="&#xe60d;" ng-click="showTabDialogOrder($event, orderInfo)" ng-if="">餐点订单</button> -->
+                            </p>
+
+                            <p>活动<span>{{orderInfo.activeName}}</span></p>
+                            <p ng-if="orderInfo.userMsg != ''">备注<span>{{orderInfo.userMsg?orderInfo.userMsg:'无'}}</span></p>
+
+                            <!-- 订单hover -->
+                            <div class="hoverOrder-wrapper" ng-class="{hoverActive: hover}">
+                                <div class="hover-content clearfix">
+                                    <img ng-if="orderInfo.userImg != ''" src="" ng-src="{{orderInfo.userImg}}" alt="" />
+                                    <img ng-if="orderInfo.userImg == ''" src="img/avatar2.png" alt="" />
+                                    <p><span style="margin-left: 0;">{{orderInfo.phoneNum}}</span><span class="fr"><em>总计</em>{{orderInfo.cashValue}} <em>元</em></span></p>
+                                    <p class="">{{orderInfo.userName}} <span class="fr">实付 <em class="price">{{orderInfo.payCash}}</em> 元</span></p>
+                                </div>
+                                <span class="triangle-up"></span>
+                                <span class="triangle-up2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 价格 -->
+                    <div class="price fr">
+                        <p><em class="total">总计</em><span>{{orderInfo.cashValue}}</span><em class="yuan">元</em></p>
+                        <p class="actual-pay" ng-if="orderInfo.userCouponId != 0"><em class="total">实付</em><span>{{orderInfo.payCash}}</span><em class="yuan">元</em></p>
+                    </div>
+                </div>
+                <div class="order-footer">
+                    <p class="time" data-icon="&#xe60e;">{{orderInfo.refundTime}} <span>发起退款</span></p>
+                    <p class="order-num fr">
+                        <span class="tap"><i>{{orderInfo.refundType}}退款</i>- {{orderInfo.refundCash}} 元</span>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- 搜索 -->
+    <div class="food-list" ng-if="$parent.flag == true">
+        <ul>
+            <li ng-repeat="foodInfo in List.data" ng-if="$parent.flag == true && foodInfo.type == 3 || foodInfo.type == 4">
+                <div class="food-header">
+                    <p class="time" data-icon="&#xe60e;">
+                        {{foodInfo.startTime}}
+                    </p>
+                    <a class="print fr" target="_blank" href="page/printOrder.html?shopId={{userInfo.shopId}}&orderNum={{foodInfo.orderNum}}" data-icon="&#xe622;">打印</a>
+                </div>
+                <div class="food-body clearfix">
+                    <div class="order-info">
+                        <div class="food-item">
+
+                            <p class="order-num">
+                                订单
+                                <span class="hoverLnk" ng-mouseenter="hover = true" ng-mouseleave="hover = false">{{foodInfo.orderNum}}</span>
+                                <button data-icon="&#xe60d;" ng-click="showTabDialog($event, foodInfo)">预订订单</button>
+                            </p>
+
+                            <p>餐点</p>
+                            <ul>
+                                <li ng-repeat="foodItem in foodInfo.foodList"><span class="food-name">{{foodItem.foodName}}</span><em>x</em> <span>{{foodItem.foodNumber}}</span></li>
+                                <!-- <li>{{foodInfo.activeName}}</li> -->
+                            </ul>
+                            <p class="attention">备注<span>{{foodInfo.mark?foodInfo.mark:"无"}}</span></p>
+
+                            <!-- 订单hover -->
+                            <div class="hoverOrder-wrapper" ng-class="{hoverActive: hover}">
+                                <div class="hover-content clearfix">
+                                    <img ng-src="{{foodInfo.userImg?foodInfo.userImg:'img/avatar2.png'}}" alt="" />
+                                    <p><span>{{foodInfo.userPhone}}</span><span class="fr"><em>总计</em>{{foodInfo.cashValue}} <em>元</em></span></p>
+                                    <p class="">{{foodInfo.userName}} <span class="fr">实付 <em class="price">{{foodInfo.cashValue - foodInfo.couponValue}}</em> 元</span></p>
+                                </div>
+                                <span class="triangle-up"></span>
+                                <span class="triangle-up2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 按钮 -->
+                    <div class="relevance-box fr">
+                        <div class="box-num">
+                            {{foodInfo.tableTypeName}}
+                            <p>{{foodInfo.tableName?foodInfo.tableName:'未指定'}}</p>
+                        </div>
+                        <button class="fr refund-btn" ng-click="refundTabDialog($event, foodInfo.payCash, foodInfo.orderNum, foodInfo.tradeNo)">退款</button>
+                        <button class="fr" ng-click="refuseRefundTabDialog($event, foodInfo.orderNum)">拒绝退款</button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- 空白页 -->
+    <div class="nodate" ng-if="List.orderFoodRetreatlist.length === 0 && (initState.code === 1 || initState.code === 2)" style="text-align: center;">
+        <img src="img/no_refund.png" alt="">
+        <h1>还没人找您退单</h1>
+        <p>这真是极好的!</p>
+    </div>
+    
+    <div class="nodate" ng-if="List.dateCountList.length === 0 && initState.code === 3" style="text-align: center;">
+        <img src="img/no_refund.png" alt="">
+        <h1>还没人找您退单</h1>
+        <p>这真是极好的!</p>
+    </div>
+
+</div>
+<!-- 餐点 关联订单弹窗 -->
+<script type="text/ng-template" id="foodTabDialog.tmpl.html">
+    <md-dialog aria-label="Mango (Fruit)" style="padding: 20px;" class="food-dialog-wrapper">
+        <form>
+            <md-dialog-content style="max-width:800px;max-height:810px;">
+                <div class="md-dialog-content md-box clearfix">
+                    <div class="foodConfirm-header">
+                        <p class="time" data-icon="&#xe60e;">{{foodInfo.cjTime}}</p>
+                        <p class="order-num fr">
+                            订单
+                            <span>{{foodInfo.orderNum}}</span>
+                        </p>
+                    </div>
+                    <div class="foodConfirm-body clearfix">
+                        <div class="order-info">
+                            <div class="user-info">
+                                <img src="img/avatar2.png" alt="">
+                                <div>
+                                    <p>{{foodInfo.uTell}}</p>
+                                    <p class="name">{{foodInfo.userName}}</p>
+                                </div>
+                            </div>
+                            <div class="activity">
+                                <p>活动<span>{{foodInfo.themeName?foodInfo.themeName:'无'}}</span></p>
+                                <p ng-if="foodInfo.message != ''">备注<span>{{foodInfo.message?foodInfo.message:'无'}}</span></p>
+                            </div>
+                        </div>
+                        <!-- 价格 & 状态 -->
+                        <div class="price">
+                            <p><em class="total">总计</em><span>{{foodInfo.cashValue}}</span><em class="yuan">元</em></p>
+                            <p class="actual-pay"><em class="total">实付</em><span>{{foodInfo.payCash}}</span><em class="yuan">元</em></p>
+                            <button>未到达</button>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</script>
+<!-- 订单 关联订单弹窗 -->
+<script type="text/ng-template" id="orderTabDialog.tmpl.html">
+    <md-dialog aria-label="Mango (Fruit)" style="padding: 20px;" class="food-dialog-wrapper">
+        <form>
+            <md-dialog-content style="max-width:800px;max-height:810px;">
+                <div class="md-dialog-content md-box clearfix">
+                    <div class="foodConfirm-header">
+                        <p class="time" data-icon="&#xe60e;">{{orderInfo.startTime}}</p>
+                        <p class="order-num fr">
+                        订单
+                            <span>{{orderInfo.orderNum}}</span>
+                        </p>
+                    </div>
+                    <div class="foodConfirm-body clearfix">
+                        <div class="order-info">
+                            <div class="user-info">
+                                <img src="img/avatar2.png" alt="">
+                                <div>
+                                    <p>{{orderInfo.phoneNum?orderInfo.phoneNum:orderInfo.userPhone}}</p>
+                                    <p class="name">{{orderInfo.userName}}</p>
+                                </div>
+                            </div>
+                            <div class="activity">
+                                <p>活动<span>{{orderInfo.activeName?orderInfo.activeName:'无'}}</span></p>
+                                <p ng-if="orderInfo.userMsg != ''">备注<span>{{orderInfo.userMsg?orderInfo.userMsg:'无'}}</span></p>
+                            </div>
+                        </div>
+                        <!-- 价格 & 状态 -->
+                        <div class="price">
+                            <p><em class="total">总计</em><span>{{orderInfo.cashValue}}</span><em class="yuan">元</em></p>
+                            <p class="actual-pay"><em class="total">实付</em><span>{{orderInfo.payCash}}</span><em class="yuan">元</em></p>
+                            <button>未到达</button>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</script>
+<!-- 退款弹窗 -->
+<script type="text/ng-template" id="refundTabDialog.tmpl.html">
+    <md-dialog aria-label="Mango (Fruit)" style="padding: 20px;" class="refund-dialog-wrapper">
+        <form>
+            <md-dialog-content style="max-width:800px;max-height:810px;">
+                <div class="md-dialog-content md-box clearfix">
+                    <h1><i></i>确定退款后，客人支付的 {{payCash}} 元将被全额退还。</h1>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <md-button ng-click="cancel()">
+                    取消
+                </md-button>
+                <md-button ng-click="confirmRefund()" style="margin-right:20px;">
+                    确认退款
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+<!-- 拒接退款 弹窗 -->
+<script type="text/ng-template" id="refuseRefundTabDialog.tmpl.html">
+    <md-dialog aria-label="Mango (Fruit)" class="refuseRefund-dialog-wrapper">
+        <form>
+            <md-dialog-content style="max-width:800px;max-height:810px;">
+                <div class="md-dialog-content md-box">
+                    <h1>拒绝退款理由</h1>
+                    <textarea name="" id="" cols="30" rows="10" placeholder="理由是~" ng-model="myReason"></textarea>
+                    <p>*请输入拒绝理由</p>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <md-button ng-click="myReasonSubmit()" style="margin-right:20px;" class="refuseRefundbtn">
+                    确定
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

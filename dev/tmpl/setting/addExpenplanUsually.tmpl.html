@@ -1,0 +1,165 @@
+<md-dialog class="addexpenplan usually">
+	<div class="title">
+		新建日常计费活动
+	</div>
+	<div class="tabs">
+		<div class="s1" ng-class="{active:modalCache.renderObj.stepIndex==1}" ng-click="toStepFst()"><span data-icon="&#xe61f;"></span>新建计费活动</div>
+		<div class="s2" ng-class="{active:modalCache.renderObj.stepIndex==2}" ng-click="toStepSec()"><span data-icon="&#xe620;"></span>输入活动价格</div>
+	</div>
+	<div class="main s{{modalCache.renderObj.stepIndex}}">
+		<div class="base-info">
+			<form name="inputForm">
+				<div class="wrapper">
+					<div class="line" layout="row" layout-wrap>
+						<div flex="10">
+							<span>活动名称</span>
+						</div>
+						<div flex="85">
+							<input type="text" ng-model="modalCache.data.activeCreate.activeName" name="activeName" required maxlength="20">
+							<div class="ng-msg" ng-messages="inputForm.activeName.$error" ng-if="inputForm.activeName.$dirty">
+								<p ng-message="required">*活动名称不能为空</p>
+							</div>
+						</div>
+						<div flex>
+							<!--<i class="help" data-icon="&#xe60f;"></i>-->
+						</div>
+					</div>
+					<div class="line" layout="row" layout-wrap>
+						<div flex="10">
+							<span>活动概况</span>
+						</div>
+						<div flex="85">
+							<input type="text" ng-model="modalCache.data.activeCreate.activeInfo" name="activeInfo" required maxlength="50">
+							<div class="ng-msg" ng-messages="inputForm.activeInfo.$error" ng-if="inputForm.activeInfo.$dirty">
+								<p ng-message="required">*活动概况不能为空</p>
+							</div>
+						</div>
+						<div flex>
+							<!--<i class="help" data-icon="&#xe60f;"></i>-->
+						</div>
+					</div>
+					<div class="line" layout="row" layout-wrap>
+						<div flex="10">
+							<span>活动说明</span>
+						</div>
+						<div flex="85">
+							<textarea ng-model="modalCache.data.activeCreate.activeDetail" maxlength="1000"></textarea>
+						</div>
+						<div flex>
+							<!--<i class="help" data-icon="&#xe60f;"></i>-->
+						</div>
+					</div>
+					<div class="line timepart" layout="row" layout-wrap>
+						<div flex="10">
+							<span>活动时段</span>
+						</div>
+						<div flex="85">
+							<div class="time-input">
+								<i data-icon="&#xe60e;"></i>
+								<md-select ng-model="modalCache.helperObj.timeStartH" class="hour">
+									<md-option ng-value="hour" ng-repeat="hour in modalCache.renderObj.hours track by $index">{{hour}}</md-option>
+								</md-select>
+								<span class="colon">:</span>
+								<md-select ng-model="modalCache.helperObj.timeStartM" class="minute">
+									<md-option value="00">00</md-option>
+									<md-option value="30">30</md-option>
+								</md-select>
+							</div>
+							<span>-</span>
+							<div class="time-input">
+								<i data-icon="&#xe60e;"></i>
+								<md-select ng-model="modalCache.helperObj.timeEndH" class="hour">
+									<md-option ng-value="hour" ng-repeat="hour in modalCache.renderObj.hours track by $index">{{hour}}</md-option>
+								</md-select>
+								<span class="colon">:</span>
+								<md-select ng-model="modalCache.helperObj.timeEndM" class="minute">
+									<md-option value="00">00</md-option>
+									<md-option value="30">30</md-option>
+								</md-select>
+							</div>
+							<!--<i class="help" data-icon="&#xe60f;"></i>-->
+						</div>
+						<div flex></div>
+					</div>
+					<div class="line time" layout="row" layout-wrap>
+						<div flex="10">
+							<span>活动时长</span>
+						</div>
+						<div flex="85">
+							<div class="input">
+								<input type="text" only-digits ng-model="modalCache.data.timePartCreate.count" name="count" required>
+								<span>小时</span>
+							</div>
+							<div class="ng-msg" ng-messages="inputForm.count.$error" ng-if="inputForm.count.$dirty">
+								<p ng-message="required">*活动时长不能为空</p>
+							</div>
+							<!--<i class="help" data-icon="&#xe60f;"></i>-->
+						</div>
+						<div flex></div>
+					</div>
+					<div class="line lasttime" layout="row" layout-wrap>
+						<div flex="10">
+							<span>最晚离场</span>
+						</div>
+						<div flex="85">
+							<div class="time-input">
+								<i data-icon="&#xe60e;"></i>
+								<md-select ng-model="modalCache.helperObj.timeEndFactH" class="hour">
+									<md-option ng-value="hour" ng-repeat="hour in modalCache.renderObj.hours track by $index">{{hour}}</md-option>
+								</md-select>
+								<span class="colon">:</span>
+								<md-select ng-model="modalCache.helperObj.timeEndFactM" class="minute">
+									<md-option value="00">00</md-option>
+									<md-option value="30">30</md-option>
+								</md-select>
+							</div>
+							<!--<i class="help" data-icon="&#xe60f;"></i>-->
+						</div>
+						<div flex></div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="detail-info">
+			<div class="wrapper">
+				<div class="table">
+					<table cellspacing="0">
+						<thead>
+							<tr>
+								<th>包厢类型</th>
+								<th>包含餐点</th>
+								<th colspan="7">每周定价(元)</th>
+							</tr>
+							<tr class="weekdays">
+								<td colspan="2"></td>
+								<td ng-repeat="weekday in modalCache.renderObj.weekdays" ng-bind="'周' + weekday"></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="9">
+									<div class="main-data">
+										<table>
+											<tr class="plan-detail-item" ng-repeat="boxType in modalCache.data.priceList">
+												<td class="box-type" ng-bind="boxTypeList[$index].type"></td>
+												<td class="meal">
+													<i data-icon="&#xe609;" ng-click="addMeal($index)" ng-if="!boxType.foodStr"></i>
+													<span data-icon="&#xe609;" class="food-str" ng-bind="boxType.foodStr" ng-if="boxType.foodStr" ng-click="addMeal($index)"><md-tooltip md-direction="right">{{boxType.foodStr}}</md-tooltip></span>
+												</td>
+												<td ng-repeat="weekday in modalCache.renderObj.weekdays" class="price"><input type="text" ng-model="boxType.priceDetailList[$index].price" only-price></td>
+											</tr>
+										</table>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="submit-btn">
+		<md-button ng-show="modalCache.renderObj.stepIndex==1" class="md-raised" ng-click="toStepSec()">下一步</md-button>
+		<md-button ng-show="modalCache.renderObj.stepIndex==2" class="md-raised" ng-click="save()">保存</md-button>
+	</div>
+</md-dialog>

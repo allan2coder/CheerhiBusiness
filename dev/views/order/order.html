@@ -1,0 +1,43 @@
+<!-- 预订确认目录 -->
+<div class="order">
+    <!-- 输入手机号搜索 -->
+<!--     <div class="srh">
+        <input type="text" placeholder="客户手机号/订单号" ng-model="num" ng-keypress="enter($event)">
+        <button class="fr" data-icon="&#xe610;" ng-click="srh()"></button>
+    </div> -->
+    <!-- 时间选择器 -->
+    <div class="time-picker datepickerdemoBasicUsage" ng-show="!flag">
+        <md-content>
+            <md-datepicker ng-model="myDate" md-placeholder="Enter date"></md-datepicker>
+        </md-content>
+    </div>
+    <!-- 4种状态选项卡 -->
+    <div class="order-wrapper">
+        <div class="order-nav">
+            <ul>
+                <li ng-if="pageAuth[0].enable" data-ui-sref="order.bookConfirm">
+                    <md-button ng-if="!isTabActive('bookConfirm')">预订确认</md-button>
+                    <span ng-if="isTabActive('bookConfirm')">预订确认</span>
+                    <!-- <i class="dot"></i> -->
+                </li>
+                <li ng-if="pageAuth[1].enable" data-ui-sref="order.foodConfirm">
+                    <md-button ng-if="!isTabActive('foodConfirm')">点餐确认</md-button>
+                    <span ng-if="isTabActive('foodConfirm')">点餐确认</span>
+                    <i></i>
+                </li>
+                <li ng-if="pageAuth[2].enable" data-ui-sref="order.refund">
+                    <md-button ng-if="!isTabActive('refund')">退餐退订</md-button>
+                    <span ng-if="isTabActive('refund')">退餐退订</span>
+                    <i></i>
+                </li>
+                <li ng-if="pageAuth[3].enable" data-ui-sref="order.bookState" ng-class="">
+                    <md-button ng-if="!isTabActive('bookState')">包房预订状态</md-button>
+                    <span ng-if="isTabActive('bookState')">包房预订状态</span>
+                </li>
+            </ul>
+        </div>
+        <div class="order-detail">
+            <div ui-view style="height: 100%;"></div>
+        </div>
+    </div>
+</div>

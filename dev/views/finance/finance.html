@@ -1,0 +1,19 @@
+<div class="finance">
+    <div class="finance-wrapper">
+        <div class="finance-nav">
+            <ul>
+                <li data-ui-sref="finance.financeDetails">
+                    <md-button ng-if="!isTabActive('financeDetails')">账单明细</md-button>
+                    <span ng-if="isTabActive('financeDetails')">账单明细</span>
+                </li>
+                <li data-ui-sref="finance.financeCheck">
+                    <md-button ng-if="!isTabActive('financeCheck')">对账管理</md-button>
+                    <span ng-if="isTabActive('financeCheck')">对账管理</span>
+                </li>
+            </ul>
+        </div>
+        <div class="finance-detail">
+            <div ui-view></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,324 @@
+@charset "utf-8";
+@import "utilities/variables";
+// 财务管理
+.finance {
+    md-select .md-select-value {
+        font-size: 14px;
+    }
+    md-input-container {
+        margin: 6px 0 20px;
+    }
+    .md-select-value .md-select-icon {
+        width: 0;
+    }
+    md-select-value {
+        .md-select-icon {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid;
+            border-top-color: rgba(0, 0, 0, 0.26);
+            &::after {
+                opacity: 0;
+            }
+        }
+    }
+    md-optgroup label {
+        display: none;
+    }
+    md-select-value:hover {
+        .md-select-icon {
+            border-top-color: rgba(0, 0, 0, 1);
+        }
+    }
+    md-input-container {
+        width: 108px;
+    }
+    .md-select-menu-container {
+        top: 176px!important;
+    }
+    // 1.预订确认
+    .finance-wrapper {
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        .finance-nav {
+            background-color: #e5edf1;
+            ul {
+                height: 60px;
+                margin-left: -1px;
+                li {
+                    height: 60px;
+                    line-height: 60px;
+                    color: #85aabc;
+                    font-size: 14px;
+                    float: left;
+                    border-top-left-radius: 4px;
+                    border-top-right-radius: 4px;
+                    button {
+                        width: 100%;
+                        height: 100%;
+                        margin: 0;
+                        padding: 0 40px;
+                        text-align: center;
+                        border-radius: 0;
+                    }
+                    button:hover {
+                        background: rgba(255, 255, 255, 0.5);
+                    }
+                    > span {
+                        display: inline-block;
+                        height: 100%;
+                        padding: 0 40px;
+                        text-align: center;
+                        height: 61px;
+                        background-color: #fff;
+                        color: #000;
+                        border-top-left-radius: 4px;
+                        border-top-right-radius: 4px;
+                    }
+                    &.active {
+                        height: 61px;
+                        background-color: #fff;
+                        color: #000;
+                    }
+                }
+            }
+        }
+        .finance-detail {
+            padding: 8px 20px 20px 20px;
+            .finance-details {
+                border: $border;
+                background-color: #f6f9fb;
+                padding: 20px;
+                // 账单明细
+                .finance-subnav {
+                    margin-bottom: 20px;
+                    ul {
+                        li {
+                            min-width: 140px;
+                            height: 76px;
+                            cursor: pointer;
+                            padding: 10px;
+                            color: #85aabc;
+                            font-size: 14px;
+                            display: inline-block;
+                            margin-right: 20px;
+                            margin-bottom: 10px;
+                            border: $border;
+                            background-color: #fff;
+                            border-radius: 4px;
+                            font-size: 16px;
+                            position: relative;
+                            p {
+                                text-align: left;
+                                font-size: 12px;
+                                color: #a1afb7;
+                                i {
+                                    width: 14px;
+                                    height: 14px;
+                                    border-radius: 7px;
+                                    background: url(../img/info_iconNoAct.png) no-repeat;
+                                    display: inline-block;
+                                    float: right;
+                                    transition: all .2s ease-in-out;
+                                    -webkit-transition: all .2s ease-in-out;
+                                    -moz-transition: all .2s ease-in-out;
+                                    -o-transition: all .2s ease-in-out;
+                                    -ms-transition: all .2s ease-in-out;
+                                }
+                                i:hover {
+                                    background: url(../img/info_iconActive.png) no-repeat;
+                                    transition: all .2s ease-in-out;
+                                    -webkit-transition: all .2s ease-in-out;
+                                    -moz-transition: all .2s ease-in-out;
+                                    -o-transition: all .2s ease-in-out;
+                                    -ms-transition: all .2s ease-in-out;
+                                }
+                            }
+                            h2 {
+                                font-size: 12px;
+                                text-align: center;
+                                color: #2f3a4d;
+                                font-weight: 400;
+                                margin-top: 8px;
+                                span {
+                                    font-size: 16px;
+                                }
+                                b {
+                                    font-size: 12px;
+                                }
+                            }
+                            &.active {
+                                background-color: #4dc1ff;
+                                p {
+                                    color: #fff;
+                                }
+                                h2 {
+                                    color: #fff;
+                                }
+                                i:hover{
+                                    background: url(../img/info_iconWhite.png) no-repeat;
+                                }
+                            }
+                            .fold {
+                                width: 134px;
+                                height: auto;
+                                border: 1px solid #ddd;
+                                background: #fff;
+                                position: absolute;
+                                top: 32px;
+                                z-index: 9;
+                                left: 7px;
+                                padding: 20px;
+                                border-radius: 4px;
+                                box-shadow: 0px 9px 12px 2px #ddd;
+                                #triangle-up {
+                                    width: 0;
+                                    height: 0;
+                                    border-left: 8px solid transparent;
+                                    border-right: 8px solid transparent;
+                                    border-bottom: 10px solid #ddd;
+                                    position: absolute;
+                                    top: -9px;
+                                    right: 11px;
+                                    z-index: 999;
+                                    #triangle-up2 {
+                                        width: 0;
+                                        height: 0;
+                                        border-left: 8px solid transparent;
+                                        border-right: 8px solid transparent;
+                                        border-bottom: 10px solid #fff;
+                                        position: absolute;
+                                        top: 2px;
+                                        right: -8px;
+                                        z-index: 999;
+                                    }
+                                }
+                                p {
+                                    text-align: center;
+                                    color: #969696;
+                                    font-size: 12px;
+                                }
+                            }
+                        }
+                    }
+                }
+                .finance-list {
+                    table {
+                        font-size: 12px;
+                        width: 100%;
+                        border: $border;
+                        background-color: #fff;
+                        tr {
+                            width: 100%;
+                            line-height: 52px;
+                            th {
+                                line-height: 94px;
+                                text-align: center;
+                            }
+                            td {
+                                text-align: center
+                            }
+                            button {
+                                color: #fff;
+                            }
+                            .audit {
+                                color: #fff;
+                            }
+                            .cash-out {
+                                color: #ff6c41;
+                            }
+                        }
+                        tr:nth-child(even) {
+                            background-color: #f8f9fa;
+                        }
+                    }
+                }
+            }
+            .finance-check {
+                .finance-subnav {
+                    li {
+                        h2 {
+                            font-size: 12px!important;
+                            margin-top: 8px;
+                            font-weight: 400;
+                            span {
+                                font-size: 16px!important;
+                            }
+                        }
+                        .fold {
+                            width: 134px;
+                            height: auto;
+                            border: 1px solid #ddd;
+                            background: #fff;
+                            position: absolute;
+                            top: 32px;
+                            z-index: 9;
+                            left: 7px;
+                            padding: 20px;
+                            border-radius: 4px;
+                            box-shadow: 0px 9px 12px 2px #ddd;
+                            #triangle-up {
+                                width: 0;
+                                height: 0;
+                                border-left: 8px solid transparent;
+                                border-right: 8px solid transparent;
+                                border-bottom: 10px solid #ddd;
+                                position: absolute;
+                                top: -9px;
+                                right: 87px;
+                                z-index: 999;
+                                #triangle-up2 {
+                                    width: 0;
+                                    height: 0;
+                                    border-left: 8px solid transparent;
+                                    border-right: 8px solid transparent;
+                                    border-bottom: 10px solid #fff;
+                                    position: absolute;
+                                    top: 2px;
+                                    right: -8px;
+                                    z-index: 999;
+                                }
+                            }
+                            p {
+                                text-align: center;
+                                color: #969696;
+                                font-size: 12px;
+                            }
+                        }
+                    }
+                    li:last-child {
+                        margin-right: 0!important;
+                    }
+                }
+                .finance-list {
+                    table {
+                        tr {
+                            th:nth-child(1),
+                            th:nth-child(2),
+                            th:nth-child(3) {
+                                font-weight: 800;
+                            }
+                            .clock {
+                                font-size: 14px;
+                            }
+                            .calc {
+                                span {
+                                    margin-left: 20px;
+                                    color: #e3e3e3;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,77 @@
+<md-dialog class="editmeal">
+	<div class="title" ng-bind="modalCache.static.title"></div>
+	<div class="fields">
+		<form name="inputForm">
+			<div class="base">
+				<div class="line mealname" layout="row" layout-wrap>
+					<div class="label" flex="20">
+						{{modalCache.renderObj.mealCateIndex==0?'套餐':'餐点'}}名称
+					</div>
+					<div class="r" flex>
+						<input type="text" name="fName" ng-model="modalCache.data.fName" required maxlength="15">
+						<div class="ng-msg" ng-messages="inputForm.fName.$error" ng-if="inputForm.fName.$dirty">
+							<p ng-message="required">*{{modalCache.renderObj.mealCateIndex==0?'套餐':'餐点'}}名称不能为空</p>
+						</div>
+					</div>
+				</div>
+				<div class="line price" layout="row" layout-wrap>
+					<div class="label" flex="20">
+						{{modalCache.renderObj.mealCateIndex==0?'套餐':'餐点'}}价格
+					</div>
+					<div class="r" flex>
+						<input type="text" name="fpPrice" ng-model="modalCache.data.fpPrice" required only-price mealprice>
+						<span>元</span>
+						<div class="ng-msg" ng-messages="inputForm.fpPrice.$error" ng-if="inputForm.fpPrice.$dirty">
+							<p ng-message="required">*{{modalCache.renderObj.mealCateIndex==0?'套餐':'餐点'}}价格不能为空</p>
+							<p ng-message="mealprice">*价格不能为小于0.01元</p>
+						</div>
+					</div>
+				</div>
+				<div class="line pic" layout="row" layout-wrap>
+					<div class="label" flex="20">
+						{{modalCache.renderObj.mealCateIndex==0?'套餐':'餐点'}}图片
+					</div>
+					<div class="r" flex>
+						<div>
+							<md-button ngf-select="upload($file)" style="{{modalCache.data.fImg=='' ? 'background-image: url(img/default_img_add.png);' : ('background-image:url(' + modalCache.renderObj.img + ');background-size: 100%;')}}">
+							</md-button>
+							<!-- <md-button ng-if="!modalCache.renderObj.isAdd" ngf-select="upload($file)" style="{{modalCache.data.fImg=='' ? 'background-image: url(img/default_img_add.png);' : ('background-image:url(' + modalCache.renderObj.img + ');background-size: 100%;')}}">
+							</md-button> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="sub-meal" ng-if="modalCache.renderObj.mealCateIndex==0">
+				<div class="thead" layout="row" layout-wrap>
+					<div flex="60">包含的商品</div>
+					<div flex>数量</div>
+				</div>
+				<div class="tbody" layout="row" layout-wrap>
+					<div class="tr" layout="row" layout-wrap ng-repeat="subMeal in modalCache.data.foodMealListJson">
+						<div flex="60" class="sub-txt">
+							<input type="text" readonly ng-focus="showSubMealPicker($index)" ng-model="subMeal.singleName">
+						</div>
+						<div flex class="sub-count">
+							<input type="text" ng-model="subMeal.tmNumber" name="tmNumber{{$index}}" only-digits forbidzero>
+							<i class="remove" data-icon="&#xe61d;" ng-click="removeSubMeal($index,subMeal.keep)"></i>
+							<div class="ng-msg" ng-messages="$eval('inputForm.tmNumber'+$index+'.$error')" ng-if="$eval('inputForm.tmNumber'+$index+'.$dirty')">
+								<p ng-message="forbidzero">*数量不能为0</p>
+							</div>
+						</div>
+					</div>
+					<div class="tr" layout="row" layout-wrap>
+						<md-button class="md-raised add-item" flex="60" ng-click="addSubMeal()">
+							<i data-icon="&#xe607;"></i>
+						</md-button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="submit-btn">
+		<md-button class="md-raised" ng-click="saveMeal()">保存</md-button>
+	</div>
+	<!-- <div class="dialog-overlay">
+		<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+	</div> -->
+</md-dialog>

@@ -1,0 +1,29 @@
+<div class="mail-list">
+	<div class="top">
+		通知<span>（{{maillist.read.notred}}/{{maillist.read.count}})</span>
+	</div>
+	<ul>
+		<li ng-repeat="mail in maillist.list" ng-click="maildetail(mail)" ng-class="{read:!mail.isDel}">
+			<div class="type t{{mail.msgType}}">
+				<i></i>
+			</div>
+			<div class="r">
+				<div class="date" ng-bind="mail.msgSendTime"></div>
+				<div class="title" ng-bind="mail.msgTitle"></div>
+				<div class="summary" ng-bind="stripText(mail.msgContent)"></div>
+			</div>
+			<div class="overlay"></div>
+			<div class="handle-delete" data-icon="&#xe606;" ng-click="delMsg($event,mail.msgId,mail.mggId)"></div>
+		</li>
+	</ul>
+</div>
+<script type="text/ng-template" id="maildetail.tmpl.html">
+	<div class="wrapper mail-detail">
+		<div class="datetime" ng-bind="mail.msgSendTime"></div>
+		<div class="type t{{mail.msgType}}">{{msgTypeArr[mail.msgType-1]}}</div>
+		<div class="title" ng-bind="mail.msgTitle"></div>
+		<div class="content">
+			<div ng-bind-html="mail.msgContent"></div>
+		</div>
+	</div>
+</script>
